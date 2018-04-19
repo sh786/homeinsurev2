@@ -7,7 +7,7 @@ const TableRow = ({row}) => (
     <td key={row.state}>{row.state}</td>
     <td key={row.zip}>{row.zip}</td>
     <td key={row.risk}>{row.risk}</td>
-    <td key={row.amountRemaining}>{row.amountRemaining}</td>
+    <td key={row.amountRemaining}>{row.amountRemaining} ETH</td>
     <td>
       <div className="field">
         <div className="control">
