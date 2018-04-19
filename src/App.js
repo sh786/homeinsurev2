@@ -7,8 +7,10 @@ import './css/open-sans.css'
 import './css/pure-min.css'
 import './css/bulma.css'
 import './App.css'
+import './fonts/fontawesome-all.js'
 
 import Main from './components/Main'
+import Nav from './components/Nav'
 
 class App extends Component {
   constructor(props) {
@@ -78,6 +80,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
+        <Nav />
         <Main storageValue={this.state.storageValue} />
       </div>
     );

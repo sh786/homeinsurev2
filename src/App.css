@@ -32,3 +32,8 @@
 .is-grouped label {
   margin-right: 5px;
 }
+
+.navbar-end .navbar-item:hover {
+  font-weight: 600;
+  color: white !important;
+}
