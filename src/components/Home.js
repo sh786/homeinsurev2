@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 
 export default class Home extends Component {
 
@@ -42,12 +42,12 @@ export default class Home extends Component {
               </Link>
             </div>
             <div className="level-right has-text-centered">
-              <a href="#">
+              <Link to='/sell'>
                 <div className="box sell-button has-background-info has-text-white">
                   <p>Seller</p>
                   <p className="sub-button-text">Buy shares in an insurance plan.</p>
                 </div>
-              </a>
+              </Link>
             </div>
           </div>
         </div>
