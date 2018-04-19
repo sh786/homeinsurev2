@@ -10,7 +10,7 @@ export default class RequestInsure extends Component {
           <div className="field">
             <label className="label">Name</label>
             <div className="control">
-              <input className="input" type="text" placeholder="Name"/>
+              <input className="input" type="text" placeholder="Name" id="name" />
             </div>
           </div>
 
@@ -20,6 +20,7 @@ export default class RequestInsure extends Component {
               <input
                 className="input"
                 type="email"
+                id="email"
                 placeholder="Email input"
                 value="email@site.com"/>
               <span className="icon is-small is-left">
@@ -31,29 +32,22 @@ export default class RequestInsure extends Component {
           <label className="label">Address</label>
           <div className="field is-grouped">
             <div className="control">
-              <input className="input" type="text" placeholder="Street Address"/>
+              <input className="input" type="text" placeholder="Street Address" id="address"/>
             </div>
             <div className="control">
-              <input className="input" type="text" placeholder="City"/>
+              <input className="input" type="text" placeholder="City" id="city"/>
             </div>
             <div className="control">
-              <input className="input" type="text" placeholder="State Abbr."/>
+              <input className="input" type="text" placeholder="State Abbr." id="state"/>
             </div>
             <div className="control">
-              <input className="input" type="text" placeholder="Zip"/>
-            </div>
-          </div>
-
-          <div className="field">
-            <label className="label">Name</label>
-            <div className="control">
-              <input className="input" type="text" placeholder="Name"/>
+              <input className="input" type="text" placeholder="Zip" id="zip"/>
             </div>
           </div>
 
           <div className="field is-grouped">
             <div className="control">
-              <button className="button is-link">Submit</button>
+              <button className="button is-link" id="submit">Submit</button>
             </div>
           </div>
         </div>
