@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import * as dbFuns from '../dbwrite.js';
 
 const TableRow = ({row}) => (
   <tr>
@@ -40,6 +41,8 @@ export default class SellInsure extends Component {
 
   componentWillMount() {
     this.getInsurancePlans()
+    dbFuns.getHouseData()
+      .then(result => console.log(result))
   }
 
   getInsurancePlans() {

@@ -105,13 +105,13 @@ function setupCompiler(host, port, protocol) {
       console.log('Note that the development build is not optimized.');
       console.log('To create a production build, use ' + chalk.cyan(cli + ' run build') + '.');
       // modified code
-      console.log("hi");
+      /*console.log("hi");
       var ref = firebase.database().ref("clients");
       ref.once('value')
         .then(function (snap) {
           console.log('snap.val()', snap.val());
         });
-      console.log();
+      console.log();*/
       isFirstCompile = false;
     }
 

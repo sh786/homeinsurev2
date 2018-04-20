@@ -1,6 +1,29 @@
 import React, {Component} from 'react';
+import * as dbFuns from '../dbwrite.js';
 
 export default class RequestInsure extends Component {
+
+  //checks if valid address. NEEDS TO BE ADJUSTED
+  isValidData(address, city, state, zip, price) {
+    if (address && city && state && zip && price) {
+      return true
+    }
+    else {
+      return false
+    }
+  }
+
+  setHouse() {
+    let address = this.refs.address.value
+    let city = this.refs.city.value
+    let state = this.refs.state.value
+    let zip = this.refs.zip.value
+    let price = this.refs.price.value
+    console.log("writing to database")
+    if (this.isValidData(address, city, state, zip, price)) {
+      dbFuns.writeHouseData(address, city, state, zip, price)
+    }
+  }
 
   render() {
     return (
@@ -21,8 +44,7 @@ export default class RequestInsure extends Component {
                 className="input"
                 type="email"
                 id="email"
-                placeholder="Email input"
-                value="email@site.com"/>
+                placeholder="Email input"/>
               <span className="icon is-small is-left">
                 <i className="fas fa-envelope"></i>
               </span>
@@ -32,22 +54,24 @@ export default class RequestInsure extends Component {
           <label className="label">Address</label>
           <div className="field is-grouped">
             <div className="control">
-              <input className="input" type="text" placeholder="Street Address" id="address"/>
+              <input className="input" type="text" placeholder="Street Address" ref="address"/>
             </div>
             <div className="control">
-              <input className="input" type="text" placeholder="City" id="city"/>
+              <input className="input" type="text" placeholder="City" ref="city"/>
             </div>
             <div className="control">
-              <input className="input" type="text" placeholder="State Abbr." id="state"/>
+              <input className="input" type="text" placeholder="State Abbr." ref="state"/>
             </div>
             <div className="control">
-              <input className="input" type="text" placeholder="Zip" id="zip"/>
+              <input className="input" type="text" placeholder="Zip" ref="zip"/>
+            </div>
+            <div className="control">
+              <input className="input" type="integer" placeholder="Price of House" ref="price"/>
             </div>
           </div>
-
           <div className="field is-grouped">
             <div className="control">
-              <button className="button is-link" id="submit">Submit</button>
+              <button className="button is-link" ref="submit" onClick={this.setHouse.bind(this)}>Submit</button>
             </div>
           </div>
         </div>
