@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import * as dbFuns from '../dbwrite.js';
+// import * as dbFuns from '../dbwrite.js';
+
 
 const TableRow = ({row}) => (
   <tr>
@@ -41,8 +42,21 @@ export default class SellInsure extends Component {
 
   componentWillMount() {
     this.getInsurancePlans()
-    dbFuns.getHouseData()
-      .then(result => console.log(result))
+    
+    var firebase = require("firebase");
+
+    var fbConfig = {
+        apiKey: "AIzaSyD3W-py1PGLjGVJiHZ3mF0CdMVy9zBLk3I",
+        authDomain: "homeinsure-201323.firebaseapp.com",
+        databaseURL: "https://homeinsure-201323.firebaseio.com/",
+        storageBucket: "gs://homeinsure-201323.appspot.com/"
+    }
+    firebase.initializeApp(fbConfig);
+
+    let housesRef = firebase.database().ref('houses/');
+    let ret = housesRef.on('value', function (snap) {
+            return snap.val();
+        });
   }
 
   getInsurancePlans() {
