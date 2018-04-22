@@ -1,5 +1,4 @@
 // firebase
-
 var firebase = require("firebase");
 
 var fbConfig = {
@@ -53,7 +52,7 @@ export function writeHouseData(address, city, zip, state, price, quote="not set"
 
 export async function getHouseData() {
     let housesRef = firebase.database().ref('houses/');
-    let ret = housesRef.on('value', function (snap) {
+    housesRef.on('value', function (snap) {
             return snap.val();
         });
 }

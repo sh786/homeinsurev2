@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import * as dbFuns from '../dbwrite.js';
+//import * as dbFuns from '../dbwrite.js';
 
 const TableRow = ({row}) => (
   <tr>
@@ -8,7 +8,8 @@ const TableRow = ({row}) => (
     <td key={row.state}>{row.state}</td>
     <td key={row.zip}>{row.zip}</td>
     <td key={row.risk}>{row.risk}</td>
-    <td key={row.amountRemaining}>{row.amountRemaining} ETH</td>
+    <td key={row.amountRemaining}>{row.amountRemaining}
+      ETH</td>
     <td>
       <div className="field">
         <div className="control">
@@ -41,8 +42,13 @@ export default class SellInsure extends Component {
 
   componentWillMount() {
     this.getInsurancePlans()
-    dbFuns.getHouseData()
-      .then(result => console.log(result))
+
+    // let housesRef = firebase
+    //   .database()
+    //   .ref('houses/');
+    // housesRef.on('value', function (snap) {
+    //   console.log(snap.val());
+    // });
   }
 
   getInsurancePlans() {
@@ -94,9 +100,12 @@ export default class SellInsure extends Component {
             </tr>
           </thead>
           <tbody>
-            {this.state.insurancePlans.map(row => {
-              return <TableRow key={row.id} row={row} />
-            })}
+            {this
+              .state
+              .insurancePlans
+              .map(row => {
+                return <TableRow key={row.id} row={row}/>
+              })}
           </tbody>
         </table>
       </div>
