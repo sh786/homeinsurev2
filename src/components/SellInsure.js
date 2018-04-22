@@ -1,5 +1,7 @@
-import React, {Component} from 'react';
-//import * as dbFuns from '../dbwrite.js';
+import React, {Component} from 'react'
+import firebase from 'firebase'
+
+const snapshotToArray = snapshot => Object.entries(snapshot).map(e => Object.assign(e[1], { key: e[0] }));
 
 const TableRow = ({row}) => (
   <tr>
@@ -41,14 +43,15 @@ export default class SellInsure extends Component {
   }
 
   componentWillMount() {
-    this.getInsurancePlans()
-
-    // let housesRef = firebase
-    //   .database()
-    //   .ref('houses/');
-    // housesRef.on('value', function (snap) {
-    //   console.log(snap.val());
-    // });
+    // this.getInsurancePlans()
+    let comp = this;
+    let housesRef = firebase
+      .database()
+      .ref('houses/');
+    housesRef.on('value', function (snap) {
+      console.log(snapshotToArray(snap.val()))
+      comp.setState({insurancePlans: snapshotToArray(snap.val())})
+    });
   }
 
   getInsurancePlans() {
@@ -104,7 +107,7 @@ export default class SellInsure extends Component {
               .state
               .insurancePlans
               .map(row => {
-                return <TableRow key={row.id} row={row}/>
+                return <TableRow key={row.address} row={row}/>
               })}
           </tbody>
         </table>
