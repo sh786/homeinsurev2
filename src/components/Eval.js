@@ -9,12 +9,11 @@ const TableRow = ({row}) => (
     <td key={row.city}>{row.city}</td>
     <td key={row.state}>{row.state}</td>
     <td key={row.zip}>{row.zip}</td>
-    <td key={row.quote}>{row.quote}</td>
-    <td key={row.valBought}>{row.price - row.valBought} ETH</td>
+    <td key={row.price}>{row.price}</td>
     <td>
       <div className="field">
         <div className="control">
-          <input className="input" id="purchase" type="text" placeholder="ETH Purchase"/>
+          <input className="input" id="quote" type="text" placeholder="Quote"/>
         </div>
       </div>
     </td>
@@ -32,7 +31,7 @@ const TableRow = ({row}) => (
   </tr>
 );
 
-export default class SellInsure extends Component {
+export default class Eval extends Component {
   constructor(props) {
     super(props)
 
@@ -88,6 +87,7 @@ export default class SellInsure extends Component {
   render() {
     return (
       <div>
+        <p>Eval Page</p>
         <table className="table is-bordered is-striped is-hoverable is-fullwidth">
           <thead>
             <tr>
@@ -95,9 +95,8 @@ export default class SellInsure extends Component {
               <th>City</th>
               <th>State</th>
               <th>Zip</th>
-              <th>Risk</th>
-              <th>Amount Remaining</th>
-              <th>Purchase</th>
+              <th>Price</th>
+              <th>Estimated Yearly Quote</th>
               <th>Confirm</th>
             </tr>
           </thead>

@@ -25,6 +25,12 @@ export default class Home extends Component {
               </Link>
             </div>
           </div>
+          <div className="has-text-centered">
+            <p>Are you a home insurance evaluator?</p>
+            <p>
+              <Link to='/eval'>Click here.</Link>
+            </p>
+          </div>
         </div>
 
         <main className="container">

@@ -41,14 +41,15 @@ export function getClientData(clientId) {
 }
 
 
-export function writeHouseData(address, city, zip, state, price, quote="not set") {
+export function writeHouseData(address, city, zip, state, price) {
   let a = firebase.database().ref('houses/').push({
       address: address,
       city: city,
       zip: zip,
       state: state,
       price: price,
-      quote: quote
+      quote: "",
+      valBought: 0
   });
 }
 
