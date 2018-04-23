@@ -22,17 +22,6 @@ var pathExists = require('path-exists');
 var config = require('../config/webpack.config.dev');
 var paths = require('../config/paths');
 
-// firebase
-var firebase = require("firebase");
-
-var fbConfig = {
-  apiKey: "AIzaSyD3W-py1PGLjGVJiHZ3mF0CdMVy9zBLk3I",
-  authDomain: "homeinsure-201323.firebaseapp.com",
-  databaseURL: "https://homeinsure-201323.firebaseio.com/",
-  storageBucket: "gs://homeinsure-201323.appspot.com/"
-}
-firebase.initializeApp(fbConfig);
-
 var useYarn = pathExists.sync(paths.yarnLockFile);
 var cli = useYarn ? 'yarn' : 'npm';
 var isInteractive = process.stdout.isTTY;

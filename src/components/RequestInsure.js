@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import * as dbFuns from '../dbwrite.js';
+import React, {Component} from 'react'
+import {writeHouseData} from '../utils/firebase'
 
 export default class RequestInsure extends Component {
 
@@ -7,8 +7,7 @@ export default class RequestInsure extends Component {
   isValidData(address, city, state, zip, price) {
     if (address && city && state && zip && price) {
       return true
-    }
-    else {
+    } else {
       return false
     }
   }
@@ -21,7 +20,7 @@ export default class RequestInsure extends Component {
     let price = this.refs.price.value
     console.log("writing to database")
     if (this.isValidData(address, city, state, zip, price)) {
-      dbFuns.writeHouseData(address, city, state, zip, price)
+      writeHouseData(address, city, state, zip, price)
     }
   }
 
@@ -33,18 +32,14 @@ export default class RequestInsure extends Component {
           <div className="field">
             <label className="label">Name</label>
             <div className="control">
-              <input className="input" type="text" placeholder="Name" id="name" />
+              <input className="input" type="text" placeholder="Name" id="name"/>
             </div>
           </div>
 
           <div className="field">
             <label className="label">Email</label>
             <div className="control has-icons-left has-icons-right">
-              <input
-                className="input"
-                type="email"
-                id="email"
-                placeholder="Email input"/>
+              <input className="input" type="email" id="email" placeholder="Email input"/>
               <span className="icon is-small is-left">
                 <i className="fas fa-envelope"></i>
               </span>
@@ -54,7 +49,11 @@ export default class RequestInsure extends Component {
           <label className="label">Address</label>
           <div className="field is-grouped">
             <div className="control">
-              <input className="input" type="text" placeholder="Street Address" ref="address"/>
+              <input
+                className="input"
+                type="text"
+                placeholder="Street Address"
+                ref="address"/>
             </div>
             <div className="control">
               <input className="input" type="text" placeholder="City" ref="city"/>
@@ -66,12 +65,21 @@ export default class RequestInsure extends Component {
               <input className="input" type="text" placeholder="Zip" ref="zip"/>
             </div>
             <div className="control">
-              <input className="input" type="integer" placeholder="Price of House" ref="price"/>
+              <input
+                className="input"
+                type="integer"
+                placeholder="Price of House"
+                ref="price"/>
             </div>
           </div>
           <div className="field is-grouped">
             <div className="control">
-              <button className="button is-link" ref="submit" onClick={this.setHouse.bind(this)}>Submit</button>
+              <button
+                className="button is-link"
+                ref="submit"
+                onClick={this
+                .setHouse
+                .bind(this)}>Submit</button>
             </div>
           </div>
         </div>

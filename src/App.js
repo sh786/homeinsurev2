@@ -12,9 +12,13 @@ import './fonts/fontawesome-all.js'
 import Main from './components/Main'
 import Nav from './components/Nav'
 
+import {init as firebaseInit} from './utils/firebase'
+
+
 class App extends Component {
   constructor(props) {
     super(props)
+    firebaseInit()
 
     this.state = {
       storageValue: 0,

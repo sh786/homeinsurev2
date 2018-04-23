@@ -3,18 +3,17 @@ import firebase from 'firebase'
 
 const snapshotToArray = snapshot => Object.entries(snapshot).map(e => Object.assign(e[1], { key: e[0] }));
 
-const TableRow = ({row}) => (
+const TableRow = ({row, i}) => (
   <tr>
     <td key={row.address}>{row.address}</td>
     <td key={row.city}>{row.city}</td>
     <td key={row.state}>{row.state}</td>
     <td key={row.zip}>{row.zip}</td>
-    <td key={row.quote}>{row.quote}</td>
-    <td key={row.valBought}>{row.price - row.valBought} ETH</td>
+    <td key={row.price}>{row.price}</td>
     <td>
       <div className="field">
         <div className="control">
-          <input className="input" id="purchase" type="text" placeholder="ETH Purchase"/>
+          <input className="input" id={"quote" + i} type="text" placeholder="Quote"/>
         </div>
       </div>
     </td>
@@ -32,12 +31,13 @@ const TableRow = ({row}) => (
   </tr>
 );
 
-export default class SellInsure extends Component {
+export default class Eval extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      insurancePlans: []
+      insurancePlans: [],
+      ids: []
     }
   }
 
@@ -48,46 +48,26 @@ export default class SellInsure extends Component {
       .database()
       .ref('houses/');
     housesRef.on('value', function (snap) {
-      console.log(snapshotToArray(snap.val()))
-      comp.setState({insurancePlans: snapshotToArray(snap.val())})
+      let acc = []
+      snap.forEach(function(item) {
+        acc.push(item.key)
+      })
+      comp.setState({insurancePlans: snapshotToArray(snap.val()), ids: acc})
     });
   }
 
-  getInsurancePlans() {
-    // read from db mockdata
-    let mockPlans = [
-      {
-        id: 1,
-        address: '123 Main St.',
-        city: 'New York',
-        state: 'NY',
-        zip: '10003',
-        risk: 0.20,
-        amountRemaining: 10.3
-      }, {
-        id: 2,
-        address: '456 North St.',
-        city: 'Ithaca',
-        state: 'NY',
-        zip: '14850',
-        risk: 0.15,
-        amountRemaining: 4.2
-      }, {
-        id: 3,
-        address: '789 South St.',
-        city: 'Boxford',
-        state: 'MA',
-        zip: '01921',
-        risk: 0.08,
-        amountRemaining: 7.2
-      }
-    ]
-    this.setState({insurancePlans: mockPlans})
+  updateHouse(index, quote) {
+    var updates = {}
+    var id = this.ids[index]
+    var currQuote = this.state.insurancePlans()[index][quote]
+    updates['/houses/' + id] = currQuote + quote
+    return firebase.database().ref().update(updates)
   }
 
   render() {
     return (
       <div>
+        <p>Eval Page</p>
         <table className="table is-bordered is-striped is-hoverable is-fullwidth">
           <thead>
             <tr>
@@ -95,9 +75,8 @@ export default class SellInsure extends Component {
               <th>City</th>
               <th>State</th>
               <th>Zip</th>
-              <th>Risk</th>
-              <th>Amount Remaining</th>
-              <th>Purchase</th>
+              <th>Price</th>
+              <th>Estimated Yearly Quote</th>
               <th>Confirm</th>
             </tr>
           </thead>
@@ -105,9 +84,14 @@ export default class SellInsure extends Component {
             {this
               .state
               .insurancePlans
-              .map(row => {
-                return <TableRow key={row.address} row={row}/>
-              })}
+              .map(function(row, i) {
+                console.log(i)
+                return (<TableRow key={row.address} row={row} i={i} parent={this} />
+              )})
+              // .map((row, i) => {
+              //   return <TableRow key={row.address} row={row}/>
+              // })
+            }
           </tbody>
         </table>
       </div>
