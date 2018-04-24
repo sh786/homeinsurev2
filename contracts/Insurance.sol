@@ -1,43 +1,75 @@
 pragma solidity ^0.4.2;
 
 contract Insurance {
+
+
+  event Error (bytes32 description);
+
+  event House_Fully_Insured_Success (uint house_token, uint[] stake_tokens);
+
+  event House_Failed_To_Insure (uint house_token
+      uint[] stake_tokens);
+  // event House_Fully_Insured_Success (uint house_token, address house_owner,
+  //     uint[] stake_tokens, address[] stakeholders);
+
+  // event House_Failed_To_Insure (uint house_token, address house_owner,
+  //     uint[] stake_tokens, address[] stakeholders);
+
+  event Monthly_House_Payment (uint house_token, uint timestamp);
+
+  event Stake_Contribution (uint stake_token, uint stake_amount_insured);
+
+  address constant public company_address = 0xe0f5206bbd039e7b0592d8918820024e2a7437b9;
+
+
+  
   struct House {
-    uint house_token;
+    //uint house_token;
+    address house_owner;
     //In ether?
     uint total_to_insure;
     //In ether?
     uint amount_insured;
+    uint[] stake_tokens;
+
+    //Each stake will have to be a multiple of this minimum stake - 1% 
+    uint minimum_stake_payment;
+
   }
 
   struct Stake {
-    uint stake_token;
+    //uint stake_token;
+    uint house_token;
+    address stake_owner;
     // In ether?
     uint amount_insured;
   }
 
   //Bidirectional Mapping: may not be needed 
-  mapping(address => uint) private address_to_client_token;
-  uint[] private client_tokens;
-  address[] public clients;
+  //mapping(address => uint) private address_to_client_token;
+  address[] private client_addresses;
+  //address[] public clients;
 
-  mapping(uint => address) private client_token_to_address;
+  //mapping(uint => address) private client_token_to_address;
 
   //Client to their houses they want insured
-  mapping(uint => uint[]) private client_token_to_house_tokens;
+  mapping(address => uint[]) private address_to_house_tokens;
 
   mapping(uint => House) private house_info;
 
   //Insurer to which houses they are insuring
-  mapping(address => uint) private address_to_insurer_token;
-  mapping(uint => address) private insurer_token_to_address;
+  //mapping(address => uint) private address_to_insurer_token;
+  
+  mapping(uint => address) private stake_token_to_address;
 
-  mapping(uint => uint[]) private insurer_token_to_stake_tokens;
+  mapping(address => uint[]) private address_to_stake_tokens;
 
   mapping(uint => Stake) private stake_info;
+  address[] private stakeholder_addresses;
 
-  uint[] private insurer_tokens;
+  //uint[] private insurer_tokens;
 
-  address[] public insurers;
+  //address[] public insurers;
 
   /* TODOs for the functions:
   1.) What will be the smallest unit of currency? Wei
@@ -79,7 +111,7 @@ contract Insurance {
     assert (client_token > 0);
 
     House memory my_house = House({house_token: _house_token, total_to_insure: _total_to_insure, 
-        amount_insured: 0});
+        amount_insured: 0, ow});
     client_token_to_house_tokens[client_token].push(_house_token);
     house_info[_house_token] = my_house;
 
@@ -111,7 +143,46 @@ contract Insurance {
 
   }
 
-  
+  //Function house_expired
+  function check_house_fully_insured(uint _house_token) returns (bool success){
+    if (msg.sender != company_address) {
+      return false;
+    }
+
+    House memory my_house = house_info[_house_token];
+
+    if (my_house.amount_insured < my_house.total_to_insure) {
+      my_house_tokens = my_house.house_token
+      my_stake_tokens = my_house.stake_tokens
+
+      //length_stake_tokent = 
+      for (uint i=0; i<my_stake_tokens.length; i++) {
+        stake_address = my_stake_tokens[i];
+        transfer
+
+      }
+
+      emit House_Failed_To_Insure(my_house.house_token, my_house.stake_tokens);
+
+    }
+    else () {
+      emit House_Fully_Insured_Success(my_house.house_token, my_house.stake_tokens);
+    }
+
+
+    //Maintain invariant that house can't be over-insured
+    
+    
+  }
+
+
+
+  function make_montly_payment(uint _house_token) {
+    //msg.address and msg.value
+    
+
+  }
+
 
 
 
