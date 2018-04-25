@@ -6,7 +6,9 @@ import TableRowAccepting from './RequesterRows/Acceptance'
 import TableRowFunding from './RequesterRows/Funding'
 import TableRowActive from './RequesterRows/Active'
 
-const snapshotToArray = snapshot => Object.entries(snapshot).map(e => Object.assign(e[1], { key: e[0] }));
+const snapshotToArray = snapshot => Object
+  .entries(snapshot)
+  .map(e => Object.assign(e[1], {key: e[0]}));
 
 export default class RequesterProfile extends Component {
   constructor(props) {
@@ -18,7 +20,7 @@ export default class RequesterProfile extends Component {
   }
 
   componentWillMount() {
-    
+    // get homes for each of the four sections
   }
 
   render() {
@@ -54,9 +56,43 @@ export default class RequesterProfile extends Component {
               <th>Zip</th>
               <th>Total Value</th>
               <th>Price</th>
+              <th>Accept</th>
+              <th>Decline</th>
             </tr>
           </thead>
           <tbody>
+            {/* mock */}
+            <tr>
+              <td key="{this.state.row.address}">address</td>
+              <td key="{this.state.row.city}">city</td>
+              <td key="{this.state.row.state}">state</td>
+              <td key="{this.state.row.zip}">zip</td>
+              <td key="{this.state.row.price}">price</td>
+              <td key="{this.state.row.quote}">quote</td>
+              <td>
+                <div className="field">
+                  <div className="control">
+                    <button className="button is-link has-background-success" id="confirm">
+                      <span className="icon">
+                        <i className="fas fa-lg fa-check has-text-white"></i>
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div className="field">
+                  <div className="control">
+                    <button className="button is-link has-background-danger" id="confirm">
+                      <span className="icon">
+                        <i className="fas fa-lg fa-times has-text-white"></i>
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </td>
+            </tr>
+
             {this
               .state
               .insurancePlans
