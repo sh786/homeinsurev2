@@ -135,6 +135,7 @@ export default class RequesterProfile extends Component {
               <th>Total Value</th>
               <th>Price</th>
               <th>Days Remaining</th>
+              <th>Request Claim</th>
             </tr>
           </thead>
           <tbody>
