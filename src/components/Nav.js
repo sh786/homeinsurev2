@@ -36,6 +36,9 @@ export default class Nav extends Component {
               <Link className="navbar-item has-text-white" to='/sell'>
                 Seller
               </Link>
+              <Link className="navbar-item has-text-white" to='/requester-profile'>
+                RequesterProfile
+              </Link>
             </div>
           </div>
         </nav>

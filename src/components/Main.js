@@ -6,6 +6,7 @@ import Home from './Home'
 import RequestInsure from './RequestInsure'
 import SellInsure from './SellInsure'
 import Eval from './Eval'
+import RequesterProfile from './RequesterProfile'
 
 export default class Main extends Component {
   // Add any routes that we will use as a Route element below
@@ -18,6 +19,7 @@ export default class Main extends Component {
           <Route exact path='/request' component={RequestInsure}/>
           <Route exact path='/sell' component={SellInsure}/>
           <Route exact path='/eval' component={Eval}/>
+          <Route exact path='/requester-profile' component={RequesterProfile}/>
         </Switch>
       </main>
     );
