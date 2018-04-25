@@ -23,12 +23,32 @@ class TableRow extends Component {
     this.setState({
       inputValue: evt.target.value
     })
+    console.log(this.state.inputValue)
+  }
+
+  getAverage(quotes) {
+    var acc = 0
+    for (var i = 0; i < quotes.length; i++) {
+      acc += Number(quotes[i])
+    }
+    return toString(acc/quotes.length)
   }
 
   updateHouse(index, quote) {
     var updates = {}
     var id = this.state.ids[index]
     var currQuote = this.state.insurancePlans[index]["quote"]
+    var quotes = currQuote.split(":")
+    var newQuote = currQuote + quote + ":"
+    if (currQuote.length > 0 && quotes.length === 1) {
+      newQuote = currQuote
+    }
+    //can adjust to maybe exclude outliers or take in more evaluations
+    else if (quotes.length > 4){
+      quotes.push(quote)
+      newQuote = this.getAverage(quotes)
+    }
+
     var address  = this.state.insurancePlans[index]["address"]
     var city = this.state.insurancePlans[index]["city"]
     var price = this.state.insurancePlans[index]["price"]
@@ -38,12 +58,14 @@ class TableRow extends Component {
       address: address,
       city: city,
       price: price,
-      quote: currQuote + quote,
+      quote: newQuote,
       state: state,
       zip: zip
     }
     updates['/houses/' + id] = updateData
     console.log(updates)
+    this.state.insurancePlans[index] = updateData
+    this.setState({insurancePlans: this.state.insurancePlans})
     return firebase.database().ref().update(updates)
   }
 
