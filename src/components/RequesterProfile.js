@@ -83,7 +83,7 @@ export default class RequesterProfile extends Component {
               <td>
                 <div className="field">
                   <div className="control">
-                    <button className="button is-link has-background-danger" id="confirm">
+                    <button className="button is-link has-background-danger" id="decline">
                       <span className="icon">
                         <i className="fas fa-lg fa-times has-text-white"></i>
                       </span>
