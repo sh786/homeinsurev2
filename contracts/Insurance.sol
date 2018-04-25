@@ -35,6 +35,9 @@ contract Insurance {
     //Each stake will have to be a multiple of this minimum stake - 1% 
     uint minimum_stake_payment;
 
+    uint monthly_payment;
+    bool is_fully_insured;
+
   }
 
   struct Stake {
@@ -43,12 +46,15 @@ contract Insurance {
     address stake_owner;
     // In ether?
     uint amount_insured;
+    uint percentage_staked;
   }
 
   //Bidirectional Mapping: may not be needed 
   //mapping(address => uint) private address_to_client_token;
   address[] private client_addresses;
   //address[] public clients;
+
+  mapping(address => uint) private balances;
 
   //mapping(uint => address) private client_token_to_address;
 
@@ -152,20 +158,30 @@ contract Insurance {
     House memory my_house = house_info[_house_token];
 
     if (my_house.amount_insured < my_house.total_to_insure) {
-      my_house_tokens = my_house.house_token
       my_stake_tokens = my_house.stake_tokens
 
       //length_stake_tokent = 
       for (uint i=0; i<my_stake_tokens.length; i++) {
-        stake_address = my_stake_tokens[i];
-        transfer
+        Stake memory stake = stake_info[my_stake_tokens[i]];
+
+        //stake_address = stake_token_to_address[i];
+        address stake_address = stake.stake_owner;
+        uint stake_amount = stake.amount_insured;
+
+        stake_address.transfer(stake_amount);
+        delete stake_info[my_stake_tokens[i]];
 
       }
+
+      delete house_info[_house_token];
 
       emit House_Failed_To_Insure(my_house.house_token, my_house.stake_tokens);
 
     }
     else () {
+
+      //
+
       emit House_Fully_Insured_Success(my_house.house_token, my_house.stake_tokens);
     }
 
@@ -177,11 +193,24 @@ contract Insurance {
 
 
 
-  function make_montly_payment(uint _house_token) {
+  //Payable function that takes monthly payments in the exact amount  
+  //
+  function make_montly_payment(uint _house_token) payable {
     //msg.address and msg.value
+
+    //Check u
     
 
   }
+
+  //Sends monthly payments to stakeholders if monthly payment made correctly
+  //Otherwise homeowner has failed to pay, and reimburses the stakeholders
+  function execute_monthly_payments {
+    
+
+  }
+
+
 
 
 
