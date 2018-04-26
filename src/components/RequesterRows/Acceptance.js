@@ -23,9 +23,9 @@ export default class TableRowAccepting extends Component {
         <td>
           <div className="field">
             <div className="control">
-              <button className="button is-link" id="confirm">
+              <button className="button is-small has-background-success" id="confirm">
                 <span className="icon">
-                  <i className="fas fa-check has-text-success"></i>
+                  <i className="fas fa-lg fa-check has-text-white"></i>
                 </span>
               </button>
             </div>
@@ -34,9 +34,9 @@ export default class TableRowAccepting extends Component {
         <td>
           <div className="field">
             <div className="control">
-              <button className="button is-link" id="confirm">
+              <button className="button is-small has-background-danger" id="confirm">
                 <span className="icon">
-                  <i className="fas fa-times has-text-danger"></i>
+                  <i className="fas fa-lg fa-times has-text-white"></i>
                 </span>
               </button>
             </div>

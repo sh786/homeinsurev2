@@ -21,6 +21,17 @@ export default class TableRowWaiting extends Component {
         <td key={this.state.row.price}>{this.state.row.price}</td>
         <td key={this.state.row.quote}>{this.state.row.quote}</td>
         <td key={this.state.row.daysRemaining}>{this.state.row.daysRemaining}</td>
+        <td>
+          <div className="field">
+            <div className="control">
+              <button className="button is-small has-background-warning" id="decline">
+                <span className="icon">
+                  <i className="fas fa-lg fa-exclamation-triangle has-text-white"></i>
+                </span>
+              </button>
+            </div>
+          </div>
+        </td>
       </tr>
     )
   }

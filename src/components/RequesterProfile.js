@@ -26,7 +26,8 @@ export default class RequesterProfile extends Component {
   render() {
     return (
       <div>
-        <h4 className="title is-4 requester">Homes waiting on evaluations</h4>
+        <h4 className="title is-3 requester">Welcome, Requester Name.</h4>
+        <h5 className="title is-5 requester">Homes waiting on evaluations</h5>
         <table className="table is-bordered is-striped is-hoverable is-fullwidth">
           <thead>
             <tr>
@@ -46,7 +47,7 @@ export default class RequesterProfile extends Component {
               })}
           </tbody>
         </table>
-        <h4 className="title is-4 requester">Homes waiting on acceptance</h4>
+        <h5 className="title is-5 requester">Homes waiting on acceptance</h5>
         <table className="table is-bordered is-striped is-hoverable is-fullwidth">
           <thead>
             <tr>
@@ -72,7 +73,7 @@ export default class RequesterProfile extends Component {
               <td>
                 <div className="field">
                   <div className="control">
-                    <button className="button is-link has-background-success" id="confirm">
+                    <button className="button is-small has-background-success" id="confirm">
                       <span className="icon">
                         <i className="fas fa-lg fa-check has-text-white"></i>
                       </span>
@@ -83,7 +84,7 @@ export default class RequesterProfile extends Component {
               <td>
                 <div className="field">
                   <div className="control">
-                    <button className="button is-link has-background-danger" id="decline">
+                    <button className="button is-small has-background-danger" id="decline">
                       <span className="icon">
                         <i className="fas fa-lg fa-times has-text-white"></i>
                       </span>
@@ -101,7 +102,7 @@ export default class RequesterProfile extends Component {
               })}
           </tbody>
         </table>
-        <h4 className="title is-4 requester">Homes waiting on funding</h4>
+        <h5 className="title is-5 requester">Homes waiting on funding</h5>
         <table className="table is-bordered is-striped is-hoverable is-fullwidth">
           <thead>
             <tr>
@@ -123,7 +124,7 @@ export default class RequesterProfile extends Component {
               })}
           </tbody>
         </table>
-        <h4 className="title is-4 requester">Active Plans</h4>
+        <h5 className="title is-5 requester">Active Plans</h5>
         <table className="table is-bordered is-striped is-hoverable is-fullwidth">
           <thead>
             <tr>
@@ -134,6 +135,7 @@ export default class RequesterProfile extends Component {
               <th>Total Value</th>
               <th>Price</th>
               <th>Days Remaining</th>
+              <th>Request Claim</th>
             </tr>
           </thead>
           <tbody>
