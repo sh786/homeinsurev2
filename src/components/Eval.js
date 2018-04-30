@@ -39,7 +39,7 @@ class TableRow extends Component {
     var updates = {}
     var id = this.state.ids[index]
     var currQuote = this.state.insurancePlans[index]["quote"]
-    var amount = this.state.insurancePlans[index]["amountRemaining"]
+    var status = this.state.insurancePlans[index]["status"]
     var quotes = currQuote.split(":")
     var newQuote = currQuote + quote + ":"
     if (currQuote.length > 0 && quotes.length === 1) {
@@ -47,10 +47,9 @@ class TableRow extends Component {
     }
     //can adjust to maybe exclude outliers or take in more evaluations
     else if (quotes.length > 4){
-      quotes = quotes.slice(0, quotes.length-1)
       quotes.push(quote)
       newQuote = this.getAverage(quotes)
-      amount = newQuote
+      status = 2
     }
 
     var address  = this.state.insurancePlans[index]["address"]
@@ -58,7 +57,8 @@ class TableRow extends Component {
     var price = this.state.insurancePlans[index]["price"]
     var state = this.state.insurancePlans[index]["state"]
     var zip = this.state.insurancePlans[index]["zip"]
-    var daysRem = this.state.insurancePlans[index]["daysRemaining"]
+    var h_id = this.state.insurancePlans[index]["homeowner_id"]
+    var amountRemaining = this.state.insurancePlans[index]["amountRemaining"]
     var updateData = {
       address: address,
       city: city,
@@ -66,14 +66,13 @@ class TableRow extends Component {
       quote: newQuote,
       state: state,
       zip: zip,
-      daysRemaining: daysRem,
-      amountRemaining: amount
+      homeowner_id: h_id,
+      status: status,
+      amountRemaining: amountRemaining
     }
     updates['/houses/' + id] = updateData
-    console.log(updates)
-    const tempPlans = this.state.insurancePlans
-    tempPlans[index] = updateData
-    this.setState({insurancePlans: tempPlans})
+    this.state.insurancePlans[index] = updateData
+    this.setState({insurancePlans: this.state.insurancePlans})
     return firebase.database().ref().update(updates)
   }
 

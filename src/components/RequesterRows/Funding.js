@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 
-export default class TableRowWaiting extends Component {
+export default class TableRowFunding extends Component {
 
   constructor(props) {
     super(props)
@@ -9,6 +9,7 @@ export default class TableRowWaiting extends Component {
       row: props.row,
       i: props.i
     }
+    console.log(this.state.row.amountRemaining)
   }
 
   render() {
@@ -20,7 +21,7 @@ export default class TableRowWaiting extends Component {
         <td key={this.state.row.zip}>{this.state.row.zip}</td>
         <td key={this.state.row.price}>{this.state.row.price}</td>
         <td key={this.state.row.quote}>{this.state.row.quote}</td>
-        <td key={this.state.row.amountRemaining}>{this.state.row.amountRemaining}</td>
+        <td key='remaining'>{this.state.row.amountRemaining}</td>
       </tr>
     )
   }
