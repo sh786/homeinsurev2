@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
+import { Auth } from "aws-amplify";
 
 export default class Login extends Component {
 
@@ -27,7 +28,8 @@ export default class Login extends Component {
 
     try {
       // db call to users
-      alert("Logged in");
+      await Auth.signIn(this.state.email, this.state.password);
+      this.props.userHasAuthenticated(true);
     } catch (e) {
       alert(e.message);
     }

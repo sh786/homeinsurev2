@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import SimpleStorageContract from '../build/contracts/SimpleStorage.json'
 import getWeb3 from './utils/getWeb3'
+import { Auth } from "aws-amplify";
 
 import './css/oswald.css'
 import './css/open-sans.css'
@@ -22,8 +23,14 @@ class App extends Component {
 
     this.state = {
       storageValue: 0,
-      web3: null
+      web3: null,
+      isAuthenticated: false,
+      isAuthenticating: true
     }
+  }
+
+  userHasAuthenticated = authenticated => {
+    this.setState({ isAuthenticated: authenticated });
   }
 
   componentWillMount() {
@@ -82,10 +89,14 @@ class App extends Component {
   }
 
   render() {
+    let childProps = {
+      isAuthenticated: this.state.isAuthenticated,
+      userHasAuthenticated: this.userHasAuthenticated
+    }
     return (
       <div className="App">
         <Nav />
-        <Main storageValue={this.state.storageValue} />
+        <Main storageValue={this.state.storageValue} childProps={childProps} />
       </div>
     );
   }

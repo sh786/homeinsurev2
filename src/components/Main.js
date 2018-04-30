@@ -8,20 +8,25 @@ import SellInsure from './SellInsure'
 import Eval from './Eval'
 import RequesterProfile from './RequesterProfile'
 import Login from './Login'
+import AppliedRoute from "./AppliedRoute";
 
 export default class Main extends Component {
+  // constructor(props) {
+  //   super(props);
+
+  // }
   // Add any routes that we will use as a Route element below
   // This component handles all routing
   render() {
     return (
       <main>
         <Switch>
-          <Route exact path='/' render={()=><Home storageValue={this.props.storageValue} />} />
+          <AppliedRoute exact path='/' props={this.props.childProps} render={()=><Home storageValue={this.props.storageValue} />} />
           <Route exact path='/request' component={RequestInsure}/>
           <Route exact path='/sell' component={SellInsure}/>
           <Route exact path='/eval' component={Eval}/>
           <Route exact path='/requester-profile' component={RequesterProfile}/>
-          <Route exact path='/login' component={Login}/>
+          <AppliedRoute exact path='/login' props={this.props.childProps} component={Login}/>
         </Switch>
       </main>
     );

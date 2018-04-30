@@ -49,6 +49,7 @@
     "whatwg-fetch": "1.0.0"
   },
   "dependencies": {
+    "aws-amplify": "^0.3.3",
     "dotenv": "^2.0.0",
     "firebase": "^4.12.1",
     "react": "^15.4.2",
