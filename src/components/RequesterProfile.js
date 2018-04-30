@@ -109,6 +109,8 @@ export default class RequesterProfile extends Component {
               <th>Total Value</th>
               <th>Price</th>
               <th>Amount Remaining</th>
+              <th>Accept</th>
+              <th>Decline</th>
             </tr>
           </thead>
           <tbody>
