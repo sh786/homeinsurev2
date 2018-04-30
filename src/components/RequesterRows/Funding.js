@@ -33,7 +33,7 @@ export default class TableRowFunding extends Component {
         <td>
           <div className="field">
             <div className="control">
-              <button className="button is-small has-background-success" id="confirm" disabled={!(this.state.row.amountRemaining == 0)} onClick={() => this.acceptQuote()}>
+              <button className="button is-small has-background-success" id="confirm" disabled={!(this.state.row.amountRemaining === 0)} onClick={() => this.acceptQuote()}>
                 <span className="icon">
                   <i className="fas fa-lg fa-check has-text-white"></i>
                 </span>
@@ -44,7 +44,7 @@ export default class TableRowFunding extends Component {
         <td>
           <div className="field">
             <div className="control">
-              <button className="button is-small has-background-danger" id="confirm" disabled={!(this.state.row.amountRemaining == 0)} onClick={() => this.declineQuote()}>
+              <button className="button is-small has-background-danger" id="confirm" disabled={!(this.state.row.amountRemaining === 0)} onClick={() => this.declineQuote()}>
                 <span className="icon">
                   <i className="fas fa-lg fa-times has-text-white"></i>
                 </span>

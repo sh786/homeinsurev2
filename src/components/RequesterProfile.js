@@ -21,9 +21,6 @@ export default class RequesterProfile extends Component {
   }
 
   componentWillMount() {
-    //NEED TO PASS DOWN ID OF USER
-    let curr_user = "-LBMj8ad2kkpLUZs71re"
-
     // get homes for each of the four sections
     let comp = this;
     let housesRef = firebase
@@ -37,15 +34,15 @@ export default class RequesterProfile extends Component {
       let temp = snapshotToArray(snap.val())
       let thisUsersHouses = []
       temp.forEach(function(item) {
-        if (item["homeowner_id"] == curr_user) {
           thisUsersHouses.push(item)
-        }
+        
       })
       comp.setState({insurancePlans: thisUsersHouses, ids: idAcc})
     });
   }
 
   render() {
+    console.log(this.props.currentUser.username)
     return (
       <div>
         <h4 className="title is-3 requester">Welcome, Requester Name.</h4>
@@ -65,7 +62,7 @@ export default class RequesterProfile extends Component {
               .state
               .insurancePlans
               .map(row => {
-                if (row["status"] == 1) {
+                if (row["status"] === 1 && row["homeowner_id"] === this.props.currentUser.username) {
                   return <TableRowWaiting key={row.address} row={row}/>
                 }
               })}
@@ -91,7 +88,7 @@ export default class RequesterProfile extends Component {
               .state
               .insurancePlans
               .map((row, i) => {
-                if (row["status"] == 2) {
+                if (row["status"] === 2 && row["homeowner_id"] === this.props.currentUser.username) {
                   return <TableRowAccepting key={row.address} row={row} i={i} id={this.state.ids[i]}/>
                 }
               })
@@ -118,7 +115,7 @@ export default class RequesterProfile extends Component {
               .state
               .insurancePlans
               .map(row => {
-                if (row["status"] == 3) {
+                if (row["status"] === 3 && row["homeowner_id"] === this.props.currentUser.username) {
                   return <TableRowFunding key={row.address} row={row}/>
               }
             })}
@@ -143,7 +140,7 @@ export default class RequesterProfile extends Component {
               .state
               .insurancePlans
               .map(row => {
-                if (row["status"] == 4) {
+                if (row["status"] === 4 && row["homeowner_id"] === this.props.currentUser.username) {
                   return <TableRowActive key={row.address} row={row}/>
               }
             })}
