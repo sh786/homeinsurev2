@@ -49,7 +49,8 @@ export function writeHouseData(address, city, state, zip, price) {
       state: state,
       price: price,
       quote: "",
-      valBought: 0
+      amountRemaining: "",
+      daysRemaining: 30
   });
 }
 

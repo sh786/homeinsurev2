@@ -27,17 +27,19 @@ class TableRow extends Component {
   }
 
   getAverage(quotes) {
+    console.log(quotes)
     var acc = 0
     for (var i = 0; i < quotes.length; i++) {
-      acc += Number(quotes[i])
+      acc += parseInt(quotes[i])
     }
-    return toString(acc/quotes.length)
+    return String(Math.floor(acc/quotes.length))
   }
 
   updateHouse(index, quote) {
     var updates = {}
     var id = this.state.ids[index]
     var currQuote = this.state.insurancePlans[index]["quote"]
+    var amount = this.state.insurancePlans[index]["amountRemaining"]
     var quotes = currQuote.split(":")
     var newQuote = currQuote + quote + ":"
     if (currQuote.length > 0 && quotes.length === 1) {
@@ -45,8 +47,10 @@ class TableRow extends Component {
     }
     //can adjust to maybe exclude outliers or take in more evaluations
     else if (quotes.length > 4){
+      quotes = quotes.slice(0, quotes.length-1)
       quotes.push(quote)
       newQuote = this.getAverage(quotes)
+      amount = newQuote
     }
 
     var address  = this.state.insurancePlans[index]["address"]
@@ -54,18 +58,22 @@ class TableRow extends Component {
     var price = this.state.insurancePlans[index]["price"]
     var state = this.state.insurancePlans[index]["state"]
     var zip = this.state.insurancePlans[index]["zip"]
+    var daysRem = this.state.insurancePlans[index]["daysRemaining"]
     var updateData = {
       address: address,
       city: city,
       price: price,
       quote: newQuote,
       state: state,
-      zip: zip
+      zip: zip,
+      daysRemaining: daysRem,
+      amountRemaining: amount
     }
     updates['/houses/' + id] = updateData
     console.log(updates)
-    this.state.insurancePlans[index] = updateData
-    this.setState({insurancePlans: this.state.insurancePlans})
+    const tempPlans = this.state.insurancePlans
+    tempPlans[index] = updateData
+    this.setState({insurancePlans: tempPlans})
     return firebase.database().ref().update(updates)
   }
 
@@ -100,8 +108,6 @@ class TableRow extends Component {
     )
   }
 }
-
-
 
 export default class Eval extends Component {
 
@@ -150,11 +156,10 @@ export default class Eval extends Component {
               .state
               .insurancePlans
               .map(function(row, i) {
-                return (<TableRow key={row.address} row={row} i={i} plans={this.state.insurancePlans} ids={this.state.ids}/>
-              )}, this)
-              // .map((row, i) => {
-              //   return <TableRow key={row.address} row={row}/>
-              // })
+                if (this.state.insurancePlans[i]["quote"].length === 0 || this.state.insurancePlans[i]["quote"].indexOf(":") > 0){
+                  return (<TableRow key={row.address} row={row} i={i} plans={this.state.insurancePlans} ids={this.state.ids}/>)
+                }
+              }, this)
             }
           </tbody>
         </table>
