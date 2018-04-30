@@ -33,9 +33,8 @@ class Login extends Component {
       await Auth.signIn(this.state.email, this.state.password)
         .then(user => {
           this.setState({ currentUser: user })
-          console.log(user)
         });
-      this.props.auth.userHasAuthenticated(true);
+      this.props.auth.userHasAuthenticated(true, this.state.currentUser);
       this.props.history.push("/");
     } catch (e) {
       alert(e.message);

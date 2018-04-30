@@ -21,7 +21,7 @@ export default class Main extends Component {
       <main>
         <Switch>
           <Route exact path='/' render={()=><Home currentUser={this.props.currentUser} storageValue={this.props.storageValue} auth={this.props.childProps} />} />
-          <Route exact path='/request' component={RequestInsure}/>
+          <Route exact path='/request' render={()=><RequestInsure currentUser={this.props.currentUser} />}/>
           <Route exact path='/sell' component={SellInsure}/>
           <Route exact path='/eval' component={Eval}/>
           <Route exact path='/requester-profile' component={RequesterProfile}/>
