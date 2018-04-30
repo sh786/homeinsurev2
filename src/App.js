@@ -46,20 +46,20 @@ class App extends Component {
     })
   }
 
-  // async componentDidMount() {
-  //   try {
-  //     if (await Auth.currentSession()) {
-  //       this.userHasAuthenticated(true);
-  //     }
-  //   }
-  //   catch(e) {
-  //     if (e !== 'No current user') {
-  //       alert(e);
-  //     }
-  //   }
+  async componentDidMount() {
+    try {
+      if (await Auth.currentSession()) {
+        this.userHasAuthenticated(true);
+      }
+    }
+    catch(e) {
+      if (e !== 'No current user') {
+        alert(e);
+      }
+    }
   
-  //   this.setState({ isAuthenticating: false });
-  // }
+    this.setState({ isAuthenticating: false });
+  }
 
   instantiateContract() {
     /*
@@ -109,6 +109,7 @@ class App extends Component {
       userHasAuthenticated: this.userHasAuthenticated
     }
     return (
+      !this.state.isAuthenticating &&
       <div className="App">
         <Nav />
         <Main storageValue={this.state.storageValue} childProps={childProps} />
