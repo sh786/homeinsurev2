@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {writeHouseData} from '../utils/firebase'
+import {writeHouseData, writeClientData} from '../utils/firebase'
 
 export default class RequestInsure extends Component {
 
@@ -19,6 +19,8 @@ export default class RequestInsure extends Component {
     let zip = this.refs.zip.value
     let price = this.refs.price.value
     console.log("writing to database")
+    //write dummy client data
+    //writeClientData("chris", "charalampoudis", "helloworld");
     if (this.isValidData(address, city, state, zip, price)) {
       writeHouseData(address, city, state, zip, price)
     }

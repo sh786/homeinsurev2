@@ -15,12 +15,34 @@ export default class RequesterProfile extends Component {
     super(props)
 
     this.state = {
-      insurancePlans: []
+      insurancePlans: [],
+      ids: []
     }
   }
 
   componentWillMount() {
+    //NEED TO PASS DOWN ID OF USER
+    let curr_user = "-LBMj8ad2kkpLUZs71re"
+
     // get homes for each of the four sections
+    let comp = this;
+    let housesRef = firebase
+      .database()
+      .ref('houses/');
+    housesRef.on('value', function (snap) {
+      let idAcc = []
+      snap.forEach(function(item) {
+        idAcc.push(item.key)
+      })
+      let temp = snapshotToArray(snap.val())
+      let thisUsersHouses = []
+      temp.forEach(function(item) {
+        if (item["homeowner_id"] == curr_user) {
+          thisUsersHouses.push(item)
+        }
+      })
+      comp.setState({insurancePlans: thisUsersHouses, ids: idAcc})
+    });
   }
 
   render() {
@@ -43,7 +65,9 @@ export default class RequesterProfile extends Component {
               .state
               .insurancePlans
               .map(row => {
-                return <TableRowWaiting key={row.address} row={row}/>
+                if (row["status"] == 1) {
+                  return <TableRowWaiting key={row.address} row={row}/>
+                }
               })}
           </tbody>
         </table>
@@ -62,44 +86,16 @@ export default class RequesterProfile extends Component {
             </tr>
           </thead>
           <tbody>
-            {/* mock */}
-            <tr>
-              <td key="{this.state.row.address}">address</td>
-              <td key="{this.state.row.city}">city</td>
-              <td key="{this.state.row.state}">state</td>
-              <td key="{this.state.row.zip}">zip</td>
-              <td key="{this.state.row.price}">price</td>
-              <td key="{this.state.row.quote}">quote</td>
-              <td>
-                <div className="field">
-                  <div className="control">
-                    <button className="button is-small has-background-success" id="confirm">
-                      <span className="icon">
-                        <i className="fas fa-lg fa-check has-text-white"></i>
-                      </span>
-                    </button>
-                  </div>
-                </div>
-              </td>
-              <td>
-                <div className="field">
-                  <div className="control">
-                    <button className="button is-small has-background-danger" id="decline">
-                      <span className="icon">
-                        <i className="fas fa-lg fa-times has-text-white"></i>
-                      </span>
-                    </button>
-                  </div>
-                </div>
-              </td>
-            </tr>
-
-            {this
+            {//NEED TO PASS DOWN ID TO COMPONENT
+              this
               .state
               .insurancePlans
-              .map(row => {
-                return <TableRowAccepting key={row.address} row={row}/>
-              })}
+              .map((row, i) => {
+                if (row["status"] == 2) {
+                  return <TableRowAccepting key={row.address} row={row} i={i} id={this.state.ids[i]}/>
+                }
+              })
+            }
           </tbody>
         </table>
         <h5 className="title is-5 requester">Homes waiting on funding</h5>
@@ -120,8 +116,10 @@ export default class RequesterProfile extends Component {
               .state
               .insurancePlans
               .map(row => {
-                return <TableRowFunding key={row.address} row={row}/>
-              })}
+                if (row["status"] == 3) {
+                  return <TableRowFunding key={row.address} row={row}/>
+              }
+            })}
           </tbody>
         </table>
         <h5 className="title is-5 requester">Active Plans</h5>
@@ -143,8 +141,10 @@ export default class RequesterProfile extends Component {
               .state
               .insurancePlans
               .map(row => {
-                return <TableRowActive key={row.address} row={row}/>
-              })}
+                if (row["status"] == 4) {
+                  return <TableRowActive key={row.address} row={row}/>
+              }
+            })}
           </tbody>
         </table>
       </div>
