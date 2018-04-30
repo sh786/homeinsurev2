@@ -147,7 +147,7 @@ export default class SellInsure extends Component {
               .state
               .insurancePlans
               .map(function(row, i) {
-                if (this.state.insurancePlans[i]["status"] == 3){
+                if (this.state.insurancePlans[i]["status"] == 3 && this.state.insurancePlans[i]["amountRemaining"] > 0){
                   return (<TableRow key={row.address} row={row} i={i} plans={this.state.insurancePlans} ids={this.state.ids}/>)
                 }
               }, this)}

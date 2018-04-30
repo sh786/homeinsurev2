@@ -27,10 +27,14 @@ class TableRow extends Component {
   }
 
   getAverage(quotes) {
+    console.log(quotes)
     var acc = 0
     for (var i = 0; i < quotes.length; i++) {
-      acc += Number(quotes[i])
+      if (quotes[i] != ""){
+        acc += Number(quotes[i])
+      }
     }
+    console.log(acc)
     var ret = (acc/quotes.length).toString()
     return ret
   }
@@ -47,10 +51,8 @@ class TableRow extends Component {
     }
     //can adjust to maybe exclude outliers or take in more evaluations
     else if (quotes.length > 4){
-      console.log(quotes)
       quotes.pop()
       quotes.push(quote)
-      console.log(quotes)
       newQuote = this.getAverage(quotes)
       status = 2
     }
@@ -74,8 +76,9 @@ class TableRow extends Component {
       amountRemaining: amountRemaining
     }
     updates['/houses/' + id] = updateData
-    this.state.insurancePlans[index] = updateData
-    this.setState({insurancePlans: this.state.insurancePlans})
+    var temp = this.state.insurancePlans
+    temp[index] = updateData
+    this.setState({insurancePlans: temp})
     return firebase.database().ref().update(updates)
   }
 
