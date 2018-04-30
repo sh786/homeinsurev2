@@ -9,7 +9,15 @@ export default class TableRowFunding extends Component {
       row: props.row,
       i: props.i
     }
-    console.log(this.state.row.amountRemaining)
+  }
+
+  //function for when a homeowner accepts the insurance quote. Will use the contract
+  acceptQuote(){
+    return
+  }
+
+  declineQuote() {
+    return
   }
 
   render() {
@@ -22,6 +30,28 @@ export default class TableRowFunding extends Component {
         <td key={this.state.row.price}>{this.state.row.price}</td>
         <td key={this.state.row.quote}>{this.state.row.quote}</td>
         <td key='remaining'>{this.state.row.amountRemaining}</td>
+        <td>
+          <div className="field">
+            <div className="control">
+              <button className="button is-small has-background-success" id="confirm" disabled={!(this.state.row.amountRemaining == 0)} onClick={() => this.acceptQuote()}>
+                <span className="icon">
+                  <i className="fas fa-lg fa-check has-text-white"></i>
+                </span>
+              </button>
+            </div>
+          </div>
+        </td>
+        <td>
+          <div className="field">
+            <div className="control">
+              <button className="button is-small has-background-danger" id="confirm" disabled={!(this.state.row.amountRemaining == 0)} onClick={() => this.declineQuote()}>
+                <span className="icon">
+                  <i className="fas fa-lg fa-times has-text-white"></i>
+                </span>
+              </button>
+            </div>
+          </div>
+        </td>
       </tr>
     )
   }

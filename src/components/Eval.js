@@ -27,12 +27,12 @@ class TableRow extends Component {
   }
 
   getAverage(quotes) {
-    console.log(quotes)
     var acc = 0
     for (var i = 0; i < quotes.length; i++) {
-      acc += parseInt(quotes[i])
+      acc += Number(quotes[i])
     }
-    return String(Math.floor(acc/quotes.length))
+    var ret = (acc/quotes.length).toString()
+    return ret
   }
 
   updateHouse(index, quote) {
@@ -47,11 +47,14 @@ class TableRow extends Component {
     }
     //can adjust to maybe exclude outliers or take in more evaluations
     else if (quotes.length > 4){
+      console.log(quotes)
+      quotes.pop()
       quotes.push(quote)
+      console.log(quotes)
       newQuote = this.getAverage(quotes)
       status = 2
     }
-
+    console.log(newQuote)
     var address  = this.state.insurancePlans[index]["address"]
     var city = this.state.insurancePlans[index]["city"]
     var price = this.state.insurancePlans[index]["price"]
