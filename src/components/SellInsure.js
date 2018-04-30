@@ -3,36 +3,6 @@ import firebase from 'firebase'
 
 const snapshotToArray = snapshot => Object.entries(snapshot).map(e => Object.assign(e[1], { key: e[0] }));
 
-/*const TableRow = ({row}) => (
-  <tr>
-    <td key={row.address}>{row.address}</td>
-    <td key={row.city}>{row.city}</td>
-    <td key={row.state}>{row.state}</td>
-    <td key={row.zip}>{row.zip}</td>
-    <td key={row.quote}>{row.quote}</td>
-    <td key={row.valBought}>{row.price - row.valBought} ETH</td>
-    <td>
-      <div className="field">
-        <div className="control">
-          <input className="input" id="purchase" type="text" placeholder="ETH Purchase"/>
-        </div>
-      </div>
-    </td>
-    <td>
-      <div className="field">
-        <div className="control">
-          <button className="button is-link" id="confirm">
-            <span className="icon">
-              <i className="fas fa-paper-plane has-text-white"></i>
-            </span>
-          </button>
-        </div>
-      </div>
-    </td>
-  </tr>
-);*/
-
-
 class TableRow extends Component {
 
   constructor(props) {
@@ -53,7 +23,6 @@ class TableRow extends Component {
     this.setState({
       inputValue: evt.target.value
     })
-    console.log(this.state.inputValue)
   }
 
   getAverage(quotes) {
@@ -61,41 +30,39 @@ class TableRow extends Component {
     for (var i = 0; i < quotes.length; i++) {
       acc += Number(quotes[i])
     }
-    return toString(acc/quotes.length)
+    var ret = (acc/quotes.length).toString()
+    return ret
   }
 
   //ADJUST TO REFLECT BOUGHT INSURANCE
-  updateHouse(index, quote) {
+  updateHouse(index, buyAmount) {
     var updates = {}
     var id = this.state.ids[index]
-    var currQuote = this.state.insurancePlans[index]["quote"]
-    var quotes = currQuote.split(":")
-    var newQuote = currQuote + quote + ":"
-    if (currQuote.length > 0 && quotes.length === 1) {
-      newQuote = currQuote
-    }
-    //can adjust to maybe exclude outliers or take in more evaluations
-    else if (quotes.length > 4){
-      quotes.push(quote)
-      newQuote = this.getAverage(quotes)
-    }
+    var currRemaining = this.state.insurancePlans[index]["amountRemaining"]
+    var amountRemaining = currRemaining - buyAmount
 
+    var quote = this.state.insurancePlans[index]["quote"]
+    var status = this.state.insurancePlans[index]["status"]
     var address  = this.state.insurancePlans[index]["address"]
     var city = this.state.insurancePlans[index]["city"]
     var price = this.state.insurancePlans[index]["price"]
     var state = this.state.insurancePlans[index]["state"]
     var zip = this.state.insurancePlans[index]["zip"]
+    var h_id = this.state.insurancePlans[index]["homeowner_id"]
     var updateData = {
       address: address,
       city: city,
       price: price,
-      quote: newQuote,
+      quote: quote,
       state: state,
-      zip: zip
+      zip: zip,
+      homeowner_id: h_id,
+      status: status,
+      amountRemaining: amountRemaining
     }
     updates['/houses/' + id] = updateData
-    console.log(updates)
     this.state.insurancePlans[index] = updateData
+    this.state.row = updateData
     this.setState({insurancePlans: this.state.insurancePlans})
     return firebase.database().ref().update(updates)
   }
@@ -108,7 +75,7 @@ class TableRow extends Component {
         <td key={this.state.row.state}>{this.state.row.state}</td>
         <td key={this.state.row.zip}>{this.state.row.zip}</td>
         <td key={this.state.row.quote}>{this.state.row.quote}</td>
-        <td key={this.state.row.amountRemaining}>{this.state.row.price - this.state.row.amountRemaining} ETH</td>
+        <td key={this.state.row.amountRemaining}>{this.state.row.amountRemaining} ETH</td>
         <td>
           <div className="field">
             <div className="control">
@@ -180,7 +147,7 @@ export default class SellInsure extends Component {
               .state
               .insurancePlans
               .map(function(row, i) {
-                if (this.state.insurancePlans[i]["quote"].length > 0 && this.state.insurancePlans[i]["quote"].indexOf(":") < 0){
+                if (this.state.insurancePlans[i]["status"] == 3){
                   return (<TableRow key={row.address} row={row} i={i} plans={this.state.insurancePlans} ids={this.state.ids}/>)
                 }
               }, this)}

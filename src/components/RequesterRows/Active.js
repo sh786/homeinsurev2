@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 
-export default class TableRowWaiting extends Component {
+export default class TableRowActive extends Component {
 
   constructor(props) {
     super(props)
