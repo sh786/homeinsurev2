@@ -10,7 +10,8 @@ class Login extends Component {
 
     this.state = {
       email: "",
-      password: ""
+      password: "",
+      currentUser: ""
     };
   }
 
@@ -29,7 +30,11 @@ class Login extends Component {
 
     try {
       // db call to users
-      await Auth.signIn(this.state.email, this.state.password);
+      await Auth.signIn(this.state.email, this.state.password)
+        .then(user => {
+          this.setState({ currentUser: user })
+          console.log(user)
+        });
       this.props.auth.userHasAuthenticated(true);
       this.props.history.push("/");
     } catch (e) {

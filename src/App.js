@@ -25,12 +25,13 @@ class App extends Component {
       storageValue: 0,
       web3: null,
       isAuthenticated: false,
-      isAuthenticating: true
+      isAuthenticating: true,
+      currentUser: ''
     }
   }
 
-  userHasAuthenticated = authenticated => {
-    this.setState({ isAuthenticated: authenticated });
+  userHasAuthenticated = (authenticated, user) => {
+    this.setState({ isAuthenticated: authenticated, currentUser: user });
   }
 
   componentWillMount() {
@@ -112,7 +113,7 @@ class App extends Component {
       !this.state.isAuthenticating &&
       <div className="App">
         <Nav />
-        <Main storageValue={this.state.storageValue} childProps={childProps} />
+        <Main currentUser = {this.state.currentUser} storageValue={this.state.storageValue} childProps={childProps} />
       </div>
     );
   }

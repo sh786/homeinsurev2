@@ -8,7 +8,6 @@ import SellInsure from './SellInsure'
 import Eval from './Eval'
 import RequesterProfile from './RequesterProfile'
 import Login from './Login'
-import AppliedRoute from "./AppliedRoute";
 
 export default class Main extends Component {
   // constructor(props) {
@@ -21,7 +20,7 @@ export default class Main extends Component {
     return (
       <main>
         <Switch>
-          <Route exact path='/' render={()=><Home storageValue={this.props.storageValue} auth={this.props.childProps} />} />
+          <Route exact path='/' render={()=><Home currentUser={this.props.currentUser} storageValue={this.props.storageValue} auth={this.props.childProps} />} />
           <Route exact path='/request' component={RequestInsure}/>
           <Route exact path='/sell' component={SellInsure}/>
           <Route exact path='/eval' component={Eval}/>
