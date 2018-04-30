@@ -31,7 +31,6 @@ class Login extends Component {
       // db call to users
       await Auth.signIn(this.state.email, this.state.password);
       this.props.auth.userHasAuthenticated(true);
-      alert('logged in')
       this.props.history.push("/");
     } catch (e) {
       alert(e.message);
