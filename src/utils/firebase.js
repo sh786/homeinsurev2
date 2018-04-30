@@ -33,13 +33,12 @@ export function writeClientData(name, username, password) {
 }
 
 export function getClientData(clientId) {
-  let clientRef = firebase.database().ref('clients/1' + clientId);
+  let clientRef = firebase.database().ref('clients/' + clientId);
   clientRef.once('value')
       .then(function (snap) {
           return snap;
       });
 }
-
 
 export function writeHouseData(address, city, state, zip, price) {
   let a = firebase.database().ref('houses/').push({
@@ -50,8 +49,14 @@ export function writeHouseData(address, city, state, zip, price) {
       price: price,
       quote: "",
       amountRemaining: "",
-      daysRemaining: 30
+      daysRemaining: 30,
+      status: 1,
+      homeowner_id: "-LBMj8ad2kkpLUZs71re"
   });
+}
+
+export function removeHouse(id) {
+  let a = firebase.database().ref('houses/').child(id).remove()
 }
 
 export async function getHouseData() {
