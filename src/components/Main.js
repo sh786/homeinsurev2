@@ -21,12 +21,12 @@ export default class Main extends Component {
     return (
       <main>
         <Switch>
-          <AppliedRoute exact path='/' props={this.props.childProps} render={()=><Home storageValue={this.props.storageValue} />} />
+          <Route exact path='/' render={()=><Home storageValue={this.props.storageValue} props={this.props.childProps} />} />
           <Route exact path='/request' component={RequestInsure}/>
           <Route exact path='/sell' component={SellInsure}/>
           <Route exact path='/eval' component={Eval}/>
           <Route exact path='/requester-profile' component={RequesterProfile}/>
-          <AppliedRoute exact path='/login' props={this.props.childProps} component={Login}/>
+          <Route exact path='/login' render={()=><Login props={this.props.childProps} />}/>
         </Switch>
       </main>
     );
