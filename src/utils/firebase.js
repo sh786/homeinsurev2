@@ -48,7 +48,7 @@ export function writeHouseData(address, city, state, zip, price) {
       state: state,
       price: price,
       quote: "",
-      amountRemaining: "",
+      amountRemaining: price,
       daysRemaining: 30,
       status: 1,
       homeowner_id: "-LBMj8ad2kkpLUZs71re"
