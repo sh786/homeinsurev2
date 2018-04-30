@@ -15,7 +15,9 @@ contract Insurance {
   // event House_Failed_To_Insure (uint house_token, address house_owner,
   //     uint[] stake_tokens, address[] stakeholders);
 
-  event Monthly_House_Payment (uint house_token, uint timestamp);
+  event Monthly_House_Payment_Success (uint house_token, uint timestamtimestampp);
+
+  event Monthly_House_Payment_Failed (uint house_token, uint , bytes32 error);
 
   event Stake_Contribution (uint stake_token, uint stake_amount_insured);
 
@@ -35,9 +37,20 @@ contract Insurance {
     //Each stake will have to be a multiple of this minimum stake - 1% 
     uint minimum_stake_payment;
 
+
+    //FROM talking with Sam and Chris, a user will insure for 10,000, but make a 
+    //11,000 payment towards us. $1000 will stay in the contract, as our company cut 
+    //And 10,000 will be distributed back towards the stakeholder 
+    //
+
     uint monthly_payment;
+
+    uint monthly_stakeholder_dividend;
+
     bool is_fully_insured;
 
+    bool payment_for_month_completed;
+    //uint total_insurance_contribution
   }
 
   struct Stake {
@@ -62,6 +75,8 @@ contract Insurance {
   mapping(address => uint[]) private address_to_house_tokens;
 
   mapping(uint => House) private house_info;
+
+  uint[] private fully_insured_house_tokens;
 
   //Insurer to which houses they are insuring
   //mapping(address => uint) private address_to_insurer_token;
@@ -181,6 +196,8 @@ contract Insurance {
     else () {
 
       //
+      bool is_insured = my_house.is_fully_insured;
+
 
       emit House_Fully_Insured_Success(my_house.house_token, my_house.stake_tokens);
     }
@@ -195,18 +212,79 @@ contract Insurance {
 
   //Payable function that takes monthly payments in the exact amount  
   //
-  function make_montly_payment(uint _house_token) payable {
-    //msg.address and msg.value
 
-    //Check u
-    
+  //Immediately pay back to stakeholders 
+  
+
+  // 
+  function make_montly_payment(uint _house_token) payable returns (bool success) {
+    //msg.address and msg.value
+    House memory my_house = house_info[_house_token]
+    uint timestamp = block.timestamp;
+    //Check if address of sender matches home owner
+    if (msg.sender != my_house.house_owner){
+      bytes32 error = "Homeowner does not match address";
+      emit Monthly_House_Payment_Failed(_house_token, timestamp, error);
+      return False;
+    }
+
+    if (my_house.payment_for_month_completed){
+      bytes32 error = "Payment already completed";
+      emit Monthly_House_Payment_Failed(_house_token, timestamp, error);
+      return False;
+    }
+
+    //Maintain that payment amount by sender matches  
+    uint my_monthly_payment = my_house.monthly_payment;
+    if (msg.value < my_monthly_payment) {
+      bytes32 error = "Payment not sufficient"
+      emit Monthly_House_Payment_Failed(_house_token, timestamp, error);
+      return False;
+    }
+
+    my_house.payment_for_month_completed = True;
+    if (msg.value > my_montly_payment) {
+      uint difference = msg.value - my_montly_payment;
+      msg.sender.transfer(difference);
+    }
+
+    //Pay back the stakeholders Immediately
+
+    uint[] my_stake_tokens = my_house.stake_tokens;
+    uint my_monthly_dividend = my_house.monthly_stakeholder_dividend;
+    for (uint j = 0; j < my_stake_tokens.length; j++) {
+      Stake memory my_stake = stake_info[my_stake_tokens[i]];
+      uint dividend_amount = my_stake.percentage_staked;
+      address stake_owner = my_stake.stake_owner;
+      uint total_payout = uint(my_monthly_divided * dividend_amount / (100));
+      stake_owner.transfer(total_payout);
+    }
+
+
+    return True;
+
+
 
   }
 
   //Sends monthly payments to stakeholders if monthly payment made correctly
   //Otherwise homeowner has failed to pay, and reimburses the stakeholders
-  function execute_monthly_payments {
-    
+  function check_monthly_payments_complete {
+    for(i = 0; i < fully_insured_house_tokens.length; i++) {
+      if (fully_insured_house_tokens[i].is_fully_insured) {
+        fully_insured_house_tokens[i].is_fully_insured = false;
+      }
+      else {
+        //Throw em out of the smart contract, pay everyone back
+
+      }
+    }
+
+  }
+
+  function pay_insurance_claim {
+
+
 
   }
 
