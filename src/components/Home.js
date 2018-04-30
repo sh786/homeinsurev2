@@ -11,7 +11,7 @@ export default class Home extends Component {
             <div className="level-left has-text-centered">
               <Link to='/request'>
                 <div className="box buy-button has-background-info has-text-white">
-                  <p>Buyer</p>
+                  <p>Owner</p>
                   <p className="sub-button-text">Request an insurance quote.</p>
                 </div>
               </Link>
