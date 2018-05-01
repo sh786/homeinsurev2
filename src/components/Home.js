@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
+import { Auth } from 'aws-amplify'
 
 export default class Home extends Component {
 

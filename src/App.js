@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import SimpleStorageContract from '../build/contracts/SimpleStorage.json'
 import getWeb3 from './utils/getWeb3'
 import { Auth } from "aws-amplify";
+import { withAuthenticator } from 'aws-amplify-react';
 
 import './css/oswald.css'
 import './css/open-sans.css'
@@ -50,7 +51,7 @@ class App extends Component {
   async componentDidMount() {
     try {
       if (await Auth.currentSession()) {
-        this.userHasAuthenticated(true);
+        this.userHasAuthenticated(true, await Auth.currentAuthenticatedUser());
       }
     }
     catch(e) {
@@ -119,4 +120,5 @@ class App extends Component {
   }
 }
 
+// export default withAuthenticator(App)
 export default App

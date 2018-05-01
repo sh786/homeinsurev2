@@ -42,7 +42,6 @@ export default class RequesterProfile extends Component {
   }
 
   render() {
-    console.log(this.props.currentUser.username)
     return (
       <div>
         <h4 className="title is-3 requester">Welcome, Requester Name.</h4>
