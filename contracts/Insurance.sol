@@ -15,7 +15,7 @@ contract Insurance {
   // event House_Failed_To_Insure (uint house_token, address house_owner,
   //     uint[] stake_tokens, address[] stakeholders);
 
-  event Monthly_House_Payment_Success (uint house_token, uint timestamtimestampp);
+  event Monthly_House_Payment_Success (uint house_token, uint timestamtimestamp);
 
   event Monthly_House_Payment_Failed (uint house_token, uint , bytes32 error);
 
@@ -253,8 +253,8 @@ contract Insurance {
     uint[] my_stake_tokens = my_house.stake_tokens;
     uint my_monthly_dividend = my_house.monthly_stakeholder_dividend;
     for (uint j = 0; j < my_stake_tokens.length; j++) {
-      Stake memory my_stake = stake_info[my_stake_tokens[i]];
-      uint dividend_amount = my_stake.percentage_staked;
+      Stake memory my_stake = stake_info[my_stake_tokens[j]];
+      uint dividend_amount = my_stake.percentage_staked; 
       address stake_owner = my_stake.stake_owner;
       uint total_payout = uint(my_monthly_divided * dividend_amount / (100));
       stake_owner.transfer(total_payout);
@@ -270,21 +270,63 @@ contract Insurance {
   //Sends monthly payments to stakeholders if monthly payment made correctly
   //Otherwise homeowner has failed to pay, and reimburses the stakeholders
   function check_monthly_payments_complete {
+    if (msg.sender != company_address) {
+      return 0;
+    }
+
+
     for(i = 0; i < fully_insured_house_tokens.length; i++) {
       if (fully_insured_house_tokens[i].is_fully_insured) {
         fully_insured_house_tokens[i].is_fully_insured = false;
+
+        //emit Monthly_House_Payment_Success (fully_insured_house_tokens[i], block.timestamp);
       }
       else {
         //Throw em out of the smart contract, pay everyone back
-
+        House memory my_house = house_info[fully_insured_house_tokens[i]]
+        uint[] my_stake_tokens = my_house.stake_tokens;
+        for (uint j = 0; j < my_stake_tokens.length; j++) {
+          Stake memory my_stake = stake_info[my_stake_tokens[i]];
+          uint pay_back = my_stake.amount_insured;
+          address stake_owner = my_stake.stake_owner;
+          stake_owner.transfer(pay_back);
+        
+        }
       }
-    }
 
+    } 
+    return 1;
   }
 
-  function pay_insurance_claim {
+  function pay_insurance_claim (uint _house_token, uint payment_amount) {
+    if (msg.sender != company_address) {
+      return 0;
+    }
+
+    House memory my_house = house_info[_house_token];
 
 
+    uint my_amount_insured = my_house.amount_insured;  
+    uint my_stake_tokens = my_house.stake_tokens;
+    if (my_amount_insured < payment_amount) {
+      //event failed
+      return 0;
+
+    }
+
+    uint amount_payback_stakeholders = my_amount_insured - payment_amount;
+    address homeowner = my_house.house_owner;
+
+    homeowner.transfer(payment_amount);
+
+    for (uint j = 0; j < my_stake_tokens.length; j++) {
+      Stake memory my_stake = stake_info[my_stake_tokens[i]];
+      uint dividend_amount = my_stake.percentage_staked; 
+      uint pay_back = uint((my_stake.amount_insured * dividend_amount / 100));
+      address stake_owner = my_stake.stake_owner;
+      stake_owner.transfer(pay_back);
+    }
+    return 1;
 
   }
 
