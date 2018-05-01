@@ -113,7 +113,7 @@ class App extends Component {
     return (
       !this.state.isAuthenticating &&
       <div className="App">
-        <Nav />
+        <Nav isAuthenticated={this.state.isAuthenticated} userHasAuthenticated={this.userHasAuthenticated} />
         <Main currentUser = {this.state.currentUser} storageValue={this.state.storageValue} childProps={childProps} />
       </div>
     );
