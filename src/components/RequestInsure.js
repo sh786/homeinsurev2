@@ -22,7 +22,7 @@ export default class RequestInsure extends Component {
     //write dummy client data
     //writeClientData("chris", "charalampoudis", "helloworld");
     if (this.isValidData(address, city, state, zip, price)) {
-      writeHouseData(address, city, state, zip, price)
+      writeHouseData(address, city, state, zip, price, this.props.currentUser.username)
     }
   }
 

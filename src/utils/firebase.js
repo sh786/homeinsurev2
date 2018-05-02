@@ -40,7 +40,7 @@ export function getClientData(clientId) {
       });
 }
 
-export function writeHouseData(address, city, state, zip, price) {
+export function writeHouseData(address, city, state, zip, price, id) {
   let a = firebase.database().ref('houses/').push({
       address: address,
       city: city,
@@ -51,7 +51,7 @@ export function writeHouseData(address, city, state, zip, price) {
       amountRemaining: price,
       daysRemaining: 30,
       status: 1,
-      homeowner_id: "-LBMj8ad2kkpLUZs71re"
+      homeowner_id: id
   });
 }
 

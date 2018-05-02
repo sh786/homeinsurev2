@@ -35,7 +35,7 @@ class Login extends Component {
           this.setState({ currentUser: user })
         });
       this.props.auth.userHasAuthenticated(true, this.state.currentUser);
-      this.props.history.push("/");
+      this.props.history.push("/home");
     } catch (e) {
       alert(e.message);
     }

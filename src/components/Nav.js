@@ -1,7 +1,18 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
+import { Auth } from 'aws-amplify';
 
 export default class Nav extends Component {
+  constructor(props) {
+    super(props);
+
+  }
+
+  handleLogout = async event => {
+    await Auth.signOut();
+
+    this.props.userHasAuthenticated(false, '');
+  }
 
   render() {
     return (
@@ -11,7 +22,7 @@ export default class Nav extends Component {
           role="navigation"
           aria-label="main navigation">
           <div className="navbar-brand">
-            <Link className="navbar-item" to="/">
+            <Link className="navbar-item" to="/home">
               <span className="icon">
                 <i className="fas fa-lg fa-home has-text-white"></i>
               </span>
@@ -29,7 +40,31 @@ export default class Nav extends Component {
             </a>
           </div>
           <div className="navbar-menu">
-            <div className="navbar-end">
+            
+              {this.props.isAuthenticated
+                ? <div className="navbar-end">
+                    <Link className="navbar-item has-text-white" to='/request'>
+                      Buyer
+                    </Link>
+                    <Link className="navbar-item has-text-white" to='/sell'>
+                      Seller
+                    </Link>
+                    <Link className="navbar-item has-text-white" to='/requester-profile'>
+                      RequesterProfile
+                    </Link>
+                    <Link className="navbar-item has-text-white" to='/' onClick={this.handleLogout}>
+                      Logout
+                    </Link>
+                  </div>
+                : <div className="navbar-end">
+                  <Link className="navbar-item has-text-white" to='/'>
+                    Login
+                  </Link>
+                </div>
+              }
+              {/* <Link className="navbar-item has-text-white" to='/'>
+                Login
+              </Link>
               <Link className="navbar-item has-text-white" to='/request'>
                 Buyer
               </Link>
@@ -38,8 +73,7 @@ export default class Nav extends Component {
               </Link>
               <Link className="navbar-item has-text-white" to='/requester-profile'>
                 RequesterProfile
-              </Link>
-            </div>
+              </Link> */}
           </div>
         </nav>
       </div>
