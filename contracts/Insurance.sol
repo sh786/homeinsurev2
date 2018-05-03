@@ -46,6 +46,7 @@ contract Insurance {
     //Each stake will have to be a multiple of this minimum stake - 1% 
     uint minimum_stake_payment;
 
+
     //FROM talking with Sam and Chris, a user will insure for 10,000, but make a 
     //11,000 payment towards us. $1000 will stay in the contract, as our company cut 
     //And 10,000 will be distributed back towards the stakeholder 
