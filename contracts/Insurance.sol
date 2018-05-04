@@ -46,7 +46,6 @@ contract Insurance {
     //Each stake will have to be a multiple of this minimum stake - 1% 
     uint minimum_stake_payment;
 
-
     //FROM talking with Sam and Chris, a user will insure for 10,000, but make a 
     //11,000 payment towards us. $1000 will stay in the contract, as our company cut 
     //And 10,000 will be distributed back towards the stakeholder 
@@ -75,23 +74,23 @@ contract Insurance {
   //mapping(address => uint) private address_to_client_token;
   //address[] public clients;
 
-  mapping(address => uint) private balances;
+  mapping(address => uint) public balances;
 
   //mapping(uint => address) private client_token_to_address;
 
   //Client to their houses they want insured
-  mapping(address => uint[]) private address_to_house_tokens;
+  mapping(address => uint[]) public address_to_house_tokens;
 
-  mapping(uint => House) private house_info;
+  mapping(uint => House) public house_info;
 
-  uint[] private fully_insured_house_tokens;
+  uint[] public fully_insured_house_tokens;
 
   //Insurer to which houses they are insuring
   //mapping(address => uint) private address_to_insurer_token;
   
-  mapping(address => uint[]) private address_to_stake_tokens;
+  mapping(address => uint[]) public address_to_stake_tokens;
 
-  mapping(uint => Stake) private stake_info;
+  mapping(uint => Stake) public stake_info;
   //uint[] private insurer_tokens;
 
   //address[] public insurers;
@@ -117,6 +116,10 @@ contract Insurance {
   function add_client_address() public {
     //client_addresses.push(_house_owner);
     address_to_house_tokens[msg.sender] = new uint[](0);
+  }
+
+  function get_address_to_house_tokens(address _my_address) public returns (uint[] tokens){
+    return address_to_house_tokens[_my_address];
   }
 
 
