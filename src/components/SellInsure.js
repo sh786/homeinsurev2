@@ -35,6 +35,10 @@ class TableRow extends Component {
   }
 
   //ADJUST TO REFLECT BOUGHT INSURANCE
+
+  //TODO: Implement updateAmount function to breakup updateHouse/add_stake_for_stakeholder
+
+
   updateHouse(index, buyAmount) {
     var updates = {}
     var id = this.state.ids[index]

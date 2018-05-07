@@ -242,7 +242,7 @@ contract Insurance {
   //Immediately pay back to stakeholders 
   
 
-  
+  //TODO: Change this request to be in line with yearly payment
   function make_montly_payment(uint _house_token) payable returns (bool success) {
     //msg.address and msg.value
     House memory my_house = house_info[_house_token];
@@ -292,6 +292,9 @@ contract Insurance {
     return true;
 
   }
+
+
+  //TODO: Paying out a plan
 
 
   // function 

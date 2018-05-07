@@ -13,6 +13,7 @@ export default class RequestInsure extends Component {
   }
 
   setHouse() {
+
     let address = this.refs.address.value
     let city = this.refs.city.value
     let state = this.refs.state.value
@@ -23,6 +24,9 @@ export default class RequestInsure extends Component {
     //writeClientData("chris", "charalampoudis", "helloworld");
     if (this.isValidData(address, city, state, zip, price)) {
       writeHouseData(address, city, state, zip, price, this.props.currentUser.username)
+      // TODO: Also store user's ethereum address
+      // TODO: Generate house token
+      // TODO: Add add_house_to_client
     }
   }
 

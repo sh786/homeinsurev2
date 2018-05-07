@@ -65,3 +65,7 @@ export async function getHouseData() {
           return snap.val();
       });
 }
+
+
+
+//TODO: Function to decrement days remaining and call check_house_fully_expired on each 

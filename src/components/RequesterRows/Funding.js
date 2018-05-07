@@ -13,6 +13,9 @@ export default class TableRowFunding extends Component {
 
   //function for when a homeowner accepts the insurance quote. Will use the contract
   acceptQuote(){
+
+    //TODO: Client should pay in this function
+
     return
   }
 
