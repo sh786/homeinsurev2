@@ -35,7 +35,11 @@ class Login extends Component {
           this.setState({ currentUser: user })
         });
       this.props.auth.userHasAuthenticated(true, this.state.currentUser);
-      this.props.history.push("/home");
+      if (this.state.currentUser.username === '8cf69f19-9be1-404e-83d8-ed1f064a035f'){
+        this.props.history.push("/eval");
+      } else {
+        this.props.history.push("/home");
+      }
     } catch (e) {
       alert(e.message);
     }

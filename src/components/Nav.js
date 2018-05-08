@@ -24,12 +24,20 @@ export default class Nav extends Component {
           role="navigation"
           aria-label="main navigation">
           <div className="navbar-brand">
-            <Link className="navbar-item" to="/home">
-              <span className="icon">
-                <i className="fas fa-lg fa-home has-text-white"></i>
-              </span>
-              <h1 className="nav-title has-text-white">HomeInsure</h1>
-            </Link>
+            {(this.props.isAuthenticated && this.props.currentUser.username === '8cf69f19-9be1-404e-83d8-ed1f064a035f')
+              ? <Link className="navbar-item" to="/eval">
+                  <span className="icon">
+                    <i className="fas fa-lg fa-home has-text-white"></i>
+                  </span>
+                  <h1 className="nav-title has-text-white">HomeInsure</h1>
+                </Link>
+              : <Link className="navbar-item" to="/home">
+                <span className="icon">
+                  <i className="fas fa-lg fa-home has-text-white"></i>
+                </span>
+                <h1 className="nav-title has-text-white">HomeInsure</h1>
+              </Link>
+}
 
             <a
               role="button"
