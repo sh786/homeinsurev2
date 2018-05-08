@@ -1,3 +1,4 @@
 email, password, eth addr
 sh786@cornell.edu, Password1, 0x80049E85B357928ADC48256759690c04b08e7F1D
-ch677@cornell.edu, Password1, 
+ch677@cornell.edu, Password1,
+EVAL: sef.hamburger@gmail.com, Password1,
