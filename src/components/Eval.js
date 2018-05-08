@@ -1,7 +1,13 @@
 import React, {Component} from 'react'
 import firebase from 'firebase'
 
-const snapshotToArray = snapshot => Object.entries(snapshot).map(e => Object.assign(e[1], { key: e[0] }));
+const snapshotToArray = snapshot => Object
+  .entries(snapshot)
+  .map(e => Object.assign(e[1], {key: e[0]}));
+
+import ClaimRow from './EvaluatorRows/ClaimRow'
+
+/* TODO: Show only when the evaluator is logged in */
 
 class TableRow extends Component {
 
@@ -20,9 +26,7 @@ class TableRow extends Component {
   }
 
   updateInputValue(evt) {
-    this.setState({
-      inputValue: evt.target.value
-    })
+    this.setState({inputValue: evt.target.value})
     console.log(this.state.inputValue)
   }
 
@@ -30,12 +34,12 @@ class TableRow extends Component {
     console.log(quotes)
     var acc = 0
     for (var i = 0; i < quotes.length; i++) {
-      if (quotes[i] != ""){
+      if (quotes[i] != "") {
         acc += Number(quotes[i])
       }
     }
     console.log(acc)
-    var ret = (acc/quotes.length).toString()
+    var ret = (acc / quotes.length).toString()
     return ret
   }
 
@@ -47,17 +51,16 @@ class TableRow extends Component {
     var quotes = currQuote.split(":")
     var newQuote = currQuote + quote + ":"
     if (currQuote.length > 0 && quotes.length === 1) {
-      newQuote = currQuote
-    }
-    //can adjust to maybe exclude outliers or take in more evaluations
-    else if (quotes.length > 4){
+      newQuote =//can adjust to maybe exclude outliers or take in more evaluations
+      currQuote
+    } else if (quotes.length > 4) {
       quotes.pop()
       quotes.push(quote)
       newQuote = this.getAverage(quotes)
       status = 2
     }
     console.log(newQuote)
-    var address  = this.state.insurancePlans[index]["address"]
+    var address = this.state.insurancePlans[index]["address"]
     var city = this.state.insurancePlans[index]["city"]
     var price = this.state.insurancePlans[index]["price"]
     var state = this.state.insurancePlans[index]["state"]
@@ -79,7 +82,10 @@ class TableRow extends Component {
     var temp = this.state.insurancePlans
     temp[index] = updateData
     this.setState({insurancePlans: temp})
-    return firebase.database().ref().update(updates)
+    return firebase
+      .database()
+      .ref()
+      .update(updates)
   }
 
   render() {
@@ -93,15 +99,23 @@ class TableRow extends Component {
         <td>
           <div className="field">
             <div className="control">
-              <input className="input" id={"quote" + this.state.i} type="text" 
-              placeholder="Quote" value={this.state.inputValue} onChange={evt => this.updateInputValue(evt)}/>
+              <input
+                className="input"
+                id={"quote" + this.state.i}
+                type="text"
+                placeholder="Quote"
+                value={this.state.inputValue}
+                onChange={evt => this.updateInputValue(evt)}/>
             </div>
           </div>
         </td>
         <td>
           <div className="field">
             <div className="control">
-              <button className="button is-link" id="confirm" onClick={() => this.updateHouse(this.state.i, this.state.inputValue)}>
+              <button
+                className="button is-link"
+                id="confirm"
+                onClick={() => this.updateHouse(this.state.i, this.state.inputValue)}>
                 <span className="icon">
                   <i className="fas fa-paper-plane has-text-white"></i>
                 </span>
@@ -133,17 +147,20 @@ export default class Eval extends Component {
       .ref('houses/');
     housesRef.on('value', function (snap) {
       let idAcc = []
-      snap.forEach(function(item) {
+      snap.forEach(function (item) {
         idAcc.push(item.key)
       })
-      comp.setState({insurancePlans: snapshotToArray(snap.val()), ids: idAcc})
+      comp.setState({
+        insurancePlans: snapshotToArray(snap.val()),
+        ids: idAcc
+      })
     });
   }
 
   render() {
     return (
       <div>
-        <p>Eval Page</p>
+        <h5 className="title is-5 requester">Homes waiting on quote evaluation</h5>
         <table className="table is-bordered is-striped is-hoverable is-fullwidth">
           <thead>
             <tr>
@@ -160,12 +177,41 @@ export default class Eval extends Component {
             {this
               .state
               .insurancePlans
-              .map(function(row, i) {
-                if (this.state.insurancePlans[i]["quote"].length === 0 || this.state.insurancePlans[i]["quote"].indexOf(":") > 0){
-                  return (<TableRow key={row.address} row={row} i={i} plans={this.state.insurancePlans} ids={this.state.ids}/>)
+              .map(function (row, i) {
+                if (this.state.insurancePlans[i]["quote"].length === 0 || this.state.insurancePlans[i]["quote"].indexOf(":") > 0) {
+                  return (<TableRow
+                    key={row.address}
+                    row={row}
+                    i={i}
+                    plans={this.state.insurancePlans}
+                    ids={this.state.ids}/>)
                 }
               }, this)
-            }
+}
+          </tbody>
+        </table>
+        <h5 className="title is-5 requester">Homes waiting on claim evaluation</h5>
+        <table className="table is-bordered is-striped is-hoverable is-fullwidth">
+          <thead>
+            <tr>
+              <th>Address</th>
+              <th>City</th>
+              <th>State</th>
+              <th>Zip</th>
+              <th>Price</th>
+              <th>Amount to be Paid</th>
+              <th>Confirm</th>
+            </tr>
+          </thead>
+          <tbody>
+          {this
+              .state
+              .insurancePlans
+              .map(row => {
+                if (row["status"] === 5 && row["homeowner_id"] === this.props.currentUser.username) {
+                  return <ClaimRow key={row.address} row={row}/>
+              }
+            })}
           </tbody>
         </table>
       </div>
