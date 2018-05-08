@@ -113,9 +113,9 @@ export default class RequesterProfile extends Component {
             {this
               .state
               .insurancePlans
-              .map(row => {
+              .map((row, i) => {
                 if (row["status"] === 3 && row["homeowner_id"] === this.props.currentUser.username) {
-                  return <TableRowFunding key={row.address} row={row}/>
+                  return <TableRowFunding key={row.address} row={row} id={this.state.ids[i]}/>
               }
             })}
           </tbody>
