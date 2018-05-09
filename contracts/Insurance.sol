@@ -44,7 +44,7 @@ contract Insurance {
     uint[] stake_tokens;
 
     //Each stake will have to be a multiple of this minimum stake - 1% 
-    uint minimum_stake_payment;
+    //uint minimum_stake_payment;
 
     //FROM talking with Sam and Chris, a user will insure for 10,000, but make a 
     //11,000 payment towards us. $1000 will stay in the contract, as our company cut 
@@ -127,15 +127,33 @@ contract Insurance {
     return address_to_house_tokens[_my_address];
   }
 
+  //Called after insurer finishes an evaluation on the UI
+  function add_evaluation(uint _house_token,  uint _total_to_insure, uint _yearly_payment, 
+    uint _yearly_stakeholder_dividend) public returns (bool success) {
+    House memory my_house = house_info[_house_token];
+    my_house.house_evaluator = msg.sender;
+    my_house.total_to_insure = _total_to_insure;
+    my_house.yearly_payment = _yearly_payment;
+    my_house.yearly_stakeholder_dividend = _yearly_stakeholder_dividend;
+    return true;
+  }
 
-  function add_house_for_client(uint _house_token, uint _total_to_insure, uint _minimum_stake_payment, uint _yearly_payment, 
-    uint _yearly_stakeholder_dividend, address _house_evaluator) public {
+  function get_house_evaluator(uint _house_token) public returns (address evaluator) {
+
+    return house_info[_house_token].house_evaluator;
+  }
+
+  function get_yearly_stakeholder_dividend(uint _house_token) public returns (uint amount) {
+    return house_info[_house_token].yearly_stakeholder_dividend;
+  }
+
+  //When database hits submit, we add data to the chain  
+  function add_house_for_client(uint _house_token) public {
 
     address _house_owner = msg.sender;
-    House memory my_house = House({house_owner: _house_owner, total_to_insure: _total_to_insure, 
-        percentage_insured: 0, stake_tokens: new uint[](0), minimum_stake_payment: _minimum_stake_payment, 
-        yearly_payment: _yearly_payment, yearly_stakeholder_dividend: _yearly_stakeholder_dividend, is_fully_insured: false,
-        payment_for_year_completed:false, house_evaluator: _house_evaluator, is_claim_active:false, claim_amount: 0});
+    House memory my_house = House({house_owner: _house_owner, total_to_insure: 0, 
+        percentage_insured: 0, stake_tokens: new uint[](0), yearly_payment: 0, yearly_stakeholder_dividend: 0, 
+        is_fully_insured: false, payment_for_year_completed:false, house_evaluator: company_address, is_claim_active:false, claim_amount: 0});
 
     address_to_house_tokens[_house_owner].push(_house_token);
     house_info[_house_token] = my_house;
@@ -143,6 +161,7 @@ contract Insurance {
   }
 
   //Run a script that calls this function montly if 
+  //Also call this if the user declines their quote 
   function check_house_expired_or_declined(uint _house_token) returns (bool success){
     
     House memory my_house = house_info[_house_token];
@@ -180,7 +199,7 @@ contract Insurance {
     
   }
 
-  //TODO: Change this request to be in line with yearly payment
+  //Called when funding is completed and user hits submit 
   function make_initial_payment(uint _house_token) payable returns (bool success) {
 
     //Needs to check that house is fully insured
@@ -246,6 +265,7 @@ contract Insurance {
 
   }
 
+  //Both functions are called when Insurer calls functions 
   function create_insurance_claim (uint _house_token, uint _claim_amount) returns (bool success) { 
     House memory my_house = house_info[_house_token];
     if (my_house.house_evaluator != msg.sender) {
@@ -253,19 +273,17 @@ contract Insurance {
     }
     my_house.is_claim_active = true;
     my_house.claim_amount = _claim_amount;
-    return true;
+    return accept_insurance_claim(_house_token);
 
   }
 
-  function accept_insurance_claim (uint _house_token) returns (bool success) { 
+  function accept_insurance_claim (uint _house_token) internal returns (bool success) { 
     House memory my_house = house_info[_house_token];
-    if (my_house.house_owner != msg.sender) {
-      return false;
-    }
+    address my_house_owner = my_house.house_owner;
     if (!my_house.is_claim_active) {
       return false;
     }
-    msg.sender.transfer(my_house.claim_amount);
+    my_house_owner.transfer(my_house.claim_amount);
     uint remaining_payout = my_house.total_to_insure - my_house.claim_amount;
     uint[] memory my_stake_tokens = my_house.stake_tokens;
     for (uint j = 0; j < my_stake_tokens.length; j++) {
@@ -284,9 +302,9 @@ contract Insurance {
 
 
 
-  function add_stakeholder_address(address _stakeholder_address) public {
-    address_to_stake_tokens[_stakeholder_address] = new uint[](0);
-  }
+  // function add_stakeholder_address(address _stakeholder_address) public {
+  //   address_to_stake_tokens[_stakeholder_address] = new uint[](0);
+  // }
 
   function add_stake_for_stakeholder(uint _stake_token, uint _house_token, uint percentage_purchased) public payable returns (bool success){
     //TODO: Calculate percentage_staked
