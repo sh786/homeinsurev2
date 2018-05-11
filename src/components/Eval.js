@@ -7,8 +7,6 @@ const snapshotToArray = snapshot => Object
 
 import ClaimRow from './EvaluatorRows/ClaimRow'
 
-/* TODO: Show only when the evaluator is logged in */
-
 class TableRow extends Component {
 
   constructor(props) {

@@ -17,6 +17,7 @@ export default class Nav extends Component {
   }
 
   render() {
+    console.log(this.props.currentUser.username)
     return (
       <div>
         <nav
@@ -66,7 +67,7 @@ export default class Nav extends Component {
                     Logout
                   </Link>
                 </div>
-              : this.props.currentUser.username === '8cf69f19-9be1-404e-83d8-ed1f064a035f'
+              : (this.props.isAuthenticated && this.props.currentUser.username === '8cf69f19-9be1-404e-83d8-ed1f064a035f')
                 ? <div className="navbar-end">
                     <Link className="navbar-item has-text-white" to='/eval'>
                       Evaluator
