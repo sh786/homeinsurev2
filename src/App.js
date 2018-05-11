@@ -44,7 +44,7 @@ class App extends Component {
       this.setState({web3: results.web3})
 
       // Instantiate contract once web3 provided.
-      //this.instantiateContract()
+      this.instantiateContract()
       this.addClient(53)
       this.addEvaluation(53, 20, 4, 3)
     }).catch(() => {
@@ -84,13 +84,15 @@ class App extends Component {
         insurance
           .deployed()
           .then((instance) => {
-            this.state.insuranceContract = instance
-            this.state.web3.eth.defaultAccount = accounts[0]
+            // this.state.insuranceContract = instance
+            this.setState({insuranceContract: instance})
+            // this.state.web3.eth.defaultAccount = accounts[0]
+            this.setState({defaultAccount: accounts[0]})
           })
       })
   }
 
-  addClient(_house_token) {
+  /* addClient(_house_token) {
 
     // Declaring this for later so we can chain functions on SimpleStorage.
           this.addInsuranceContract()
@@ -138,7 +140,7 @@ class App extends Component {
               .call(_house_token)
           })
       
-  }
+  } */
 
   // addClient(_house_token) {
 
