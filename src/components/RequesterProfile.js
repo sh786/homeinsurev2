@@ -82,8 +82,7 @@ export default class RequesterProfile extends Component {
             </tr>
           </thead>
           <tbody>
-            {//NEED TO PASS DOWN ID TO COMPONENT
-              this
+            {this
               .state
               .insurancePlans
               .map((row, i) => {
@@ -138,9 +137,9 @@ export default class RequesterProfile extends Component {
             {this
               .state
               .insurancePlans
-              .map(row => {
+              .map((row, i) => {
                 if (row["status"] === 4 && row["homeowner_id"] === this.props.currentUser.username) {
-                  return <TableRowActive key={row.address} row={row}/>
+                  return <TableRowActive key={row.address} row={row} i={i} id={this.state.ids[i]}/>
               }
             })}
           </tbody>

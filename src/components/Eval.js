@@ -208,7 +208,7 @@ export default class Eval extends Component {
               .state
               .insurancePlans
               .map(row => {
-                if (row["status"] === 5 && row["homeowner_id"] === this.props.currentUser.username) {
+                if (row["status"] === 5) {
                   return <ClaimRow key={row.address} row={row}/>
               }
             })}
