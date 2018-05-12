@@ -87,7 +87,7 @@ class TableRow extends Component {
           <div className="field">
             <div className="control">
               <input className="input" id={"purchase"} type="text" 
-              placeholder={"Min Purchase" + this.state.row.price*0.01} value={this.state.inputValue} onChange={evt => this.updateInputValue(evt)}/>
+              placeholder={"Min Purchase " + this.state.row.price*0.01} value={this.state.inputValue} onChange={evt => this.updateInputValue(evt)}/>
             </div>
           </div>
         </td>
@@ -144,7 +144,7 @@ export default class SellInsure extends Component {
               <th>City</th>
               <th>State</th>
               <th>Zip</th>
-              <th>Risk</th>
+              <th>Premium</th>
               <th>Price of Home</th>
               <th>Amount Remaining</th>
               <th>Purchase</th>
