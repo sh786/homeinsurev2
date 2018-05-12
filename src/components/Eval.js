@@ -43,6 +43,43 @@ class TableRow extends Component {
     return ret
   }
 
+  addClient(_house_token) {
+    var insuranceInstance
+
+    this
+      .props
+      .myweb3
+      .eth
+      .getAccounts((error, accounts) => {
+        this.props.insuranceInstance
+          .deployed()
+          .then((instance) => {
+            console.log(instance)
+            this.props.myweb3.eth.defaultAccount = accounts[0]
+            insuranceInstance = instance
+            
+            console.log('adding a house with house_token' + _house_token)
+            return insuranceInstance.add_house_for_client(_house_token, {from: accounts[0]})
+          })
+          .then((result) => {
+              console.log(result)
+            // Get the value from the contract to prove it worked.
+            return insuranceInstance
+              .get_address_to_house_tokens
+              .call(accounts[0])
+          })
+          //.then(sleep(1000))
+          .then((result) => {
+            console.dir(result)
+          })
+      })
+  }
+
+
+
+
+
+
   updateHouse(index, quote) {
     var updates = {}
     var id = this.state.ids[index]
@@ -82,10 +119,18 @@ class TableRow extends Component {
     var temp = this.state.insurancePlans
     temp[index] = updateData
     this.setState({insurancePlans: temp})
+
+    var id_as_int = parseInt(id)
+    this.addClient(id_as_int)
+    
+
     return firebase
       .database()
       .ref()
       .update(updates)
+
+    
+
   }
 
   render() {
