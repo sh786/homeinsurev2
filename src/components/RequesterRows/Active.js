@@ -1,4 +1,6 @@
 import React, {Component} from 'react'
+import {removeHouse} from '../../utils/firebase'
+import firebase from 'firebase'
 
 export default class TableRowActive extends Component {
 
@@ -7,8 +9,46 @@ export default class TableRowActive extends Component {
 
     this.state = {
       row: props.row,
-      i: props.i
+      i: props.i,
+      id: props.id
     }
+  }
+
+  updateHouse() {
+    var updates = {}
+    var id = this.state.id
+
+    var homeowner_id = this.state.row["homeowner_id"]
+    var quote = this.state.row["quote"]
+    var amount = this.state.row["amountRemaining"]
+    var address  = this.state.row["address"]
+    var city = this.state.row["city"]
+    var price = this.state.row["price"]
+    var state = this.state.row["state"]
+    var zip = this.state.row["zip"]
+    var daysRem = this.state.row["daysRemaining"]
+    var updateData = {
+      homeowner_id: homeowner_id,
+      address: address,
+      city: city,
+      price: price,
+      quote: quote,
+      state: state,
+      zip: zip,
+      daysRemaining: daysRem,
+      amountRemaining: amount,
+      status: 5
+    }
+    updates['/houses/' + id] = updateData
+    console.log(updates)
+    var tempPlan = this.state.row
+    tempPlan = updateData
+    this.setState({row: tempPlan})
+    return firebase.database().ref().update(updates)
+  }
+
+  fileClaim(){
+    this.updateHouse()
   }
 
   render() {
@@ -24,7 +64,7 @@ export default class TableRowActive extends Component {
         <td>
           <div className="field">
             <div className="control">
-              <button className="button is-small has-background-warning" id="decline">
+              <button className="button is-small has-background-warning" id="decline" onClick={() => this.fileClaim()}>
                 <span className="icon">
                   <i className="fas fa-lg fa-exclamation-triangle has-text-white"></i>
                 </span>

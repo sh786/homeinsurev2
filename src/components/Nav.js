@@ -60,7 +60,7 @@ export default class Nav extends Component {
                     Seller
                   </Link>
                   <Link className="navbar-item has-text-white" to='/requester-profile'>
-                    RequesterProfile
+                    My Plans
                   </Link>
                   <Link className="navbar-item has-text-white" to='/' onClick={this.handleLogout}>
                     Logout
