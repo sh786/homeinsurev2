@@ -44,20 +44,8 @@ class TableRow extends Component {
   updateHouse(index, quote) {
     var updates = {}
     var id = this.state.ids[index]
-    var currQuote = this.state.insurancePlans[index]["quote"]
-    var status = this.state.insurancePlans[index]["status"]
-    var quotes = currQuote.split(":")
-    var newQuote = currQuote + quote + ":"
-    if (currQuote.length > 0 && quotes.length === 1) {
-      newQuote =//can adjust to maybe exclude outliers or take in more evaluations
-      currQuote
-    } else if (quotes.length > 4) {
-      quotes.pop()
-      quotes.push(quote)
-      newQuote = this.getAverage(quotes)
-      status = 2
-    }
-    console.log(newQuote)
+
+    var newQuote = quote
     var address = this.state.insurancePlans[index]["address"]
     var city = this.state.insurancePlans[index]["city"]
     var price = this.state.insurancePlans[index]["price"]
@@ -73,7 +61,7 @@ class TableRow extends Component {
       state: state,
       zip: zip,
       homeowner_id: h_id,
-      status: status,
+      status: 2,
       amountRemaining: amountRemaining
     }
     updates['/houses/' + id] = updateData
