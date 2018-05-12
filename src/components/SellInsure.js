@@ -40,35 +40,37 @@ class TableRow extends Component {
 
 
   updateHouse(index, buyAmount) {
-    var updates = {}
-    var id = this.state.ids[index]
-    var currRemaining = this.state.insurancePlans[index]["amountRemaining"]
-    var amountRemaining = currRemaining - buyAmount
+    if (buyAmount >= this.state.row.price*0.01){
+      var updates = {}
+      var id = this.state.ids[index]
+      var currRemaining = this.state.insurancePlans[index]["amountRemaining"]
+      var amountRemaining = currRemaining - buyAmount
 
-    var quote = this.state.insurancePlans[index]["quote"]
-    var status = this.state.insurancePlans[index]["status"]
-    var address  = this.state.insurancePlans[index]["address"]
-    var city = this.state.insurancePlans[index]["city"]
-    var price = this.state.insurancePlans[index]["price"]
-    var state = this.state.insurancePlans[index]["state"]
-    var zip = this.state.insurancePlans[index]["zip"]
-    var h_id = this.state.insurancePlans[index]["homeowner_id"]
-    var updateData = {
-      address: address,
-      city: city,
-      price: price,
-      quote: quote,
-      state: state,
-      zip: zip,
-      homeowner_id: h_id,
-      status: status,
-      amountRemaining: amountRemaining
+      var quote = this.state.insurancePlans[index]["quote"]
+      var status = this.state.insurancePlans[index]["status"]
+      var address  = this.state.insurancePlans[index]["address"]
+      var city = this.state.insurancePlans[index]["city"]
+      var price = this.state.insurancePlans[index]["price"]
+      var state = this.state.insurancePlans[index]["state"]
+      var zip = this.state.insurancePlans[index]["zip"]
+      var h_id = this.state.insurancePlans[index]["homeowner_id"]
+      var updateData = {
+        address: address,
+        city: city,
+        price: price,
+        quote: quote,
+        state: state,
+        zip: zip,
+        homeowner_id: h_id,
+        status: status,
+        amountRemaining: amountRemaining
+      }
+      updates['/houses/' + id] = updateData
+      this.state.insurancePlans[index] = updateData
+      this.state.row = updateData
+      this.setState({insurancePlans: this.state.insurancePlans})
+      return firebase.database().ref().update(updates)
     }
-    updates['/houses/' + id] = updateData
-    this.state.insurancePlans[index] = updateData
-    this.state.row = updateData
-    this.setState({insurancePlans: this.state.insurancePlans})
-    return firebase.database().ref().update(updates)
   }
 
   render() {
@@ -78,13 +80,14 @@ class TableRow extends Component {
         <td key={this.state.row.city}>{this.state.row.city}</td>
         <td key={this.state.row.state}>{this.state.row.state}</td>
         <td key={this.state.row.zip}>{this.state.row.zip}</td>
-        <td key={this.state.row.quote}>{this.state.row.quote}</td>
-        <td key={this.state.row.amountRemaining}>{this.state.row.amountRemaining} ETH</td>
+        <td key="quote">{this.state.row.quote}</td>
+        <td key="price">{this.state.row.price}</td>
+        <td key="remaining">{this.state.row.amountRemaining} ETH</td>
         <td>
           <div className="field">
             <div className="control">
               <input className="input" id={"purchase"} type="text" 
-              placeholder="ETH Purchase" value={this.state.inputValue} onChange={evt => this.updateInputValue(evt)}/>
+              placeholder={"Min Purchase" + this.state.row.price*0.01} value={this.state.inputValue} onChange={evt => this.updateInputValue(evt)}/>
             </div>
           </div>
         </td>
@@ -142,6 +145,7 @@ export default class SellInsure extends Component {
               <th>State</th>
               <th>Zip</th>
               <th>Risk</th>
+              <th>Price of Home</th>
               <th>Amount Remaining</th>
               <th>Purchase</th>
             </tr>
