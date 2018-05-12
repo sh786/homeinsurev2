@@ -96,6 +96,8 @@ contract Insurance {
   mapping(address => uint[]) public address_to_stake_tokens;
 
   mapping(uint => Stake) public stake_info;
+
+  uint public num_things = 0;
   //uint[] private insurer_tokens;
 
   //address[] public insurers;
@@ -116,6 +118,9 @@ contract Insurance {
 
   //Getters and setters for all mappings above
   //
+  function get_num_things() public returns (uint){
+    return num_things; 
+  }
 
 
   function add_client_address() public {
@@ -135,12 +140,18 @@ contract Insurance {
     my_house.total_to_insure = _total_to_insure;
     my_house.yearly_payment = _yearly_payment;
     my_house.yearly_stakeholder_dividend = _yearly_stakeholder_dividend;
+    house_info[_house_token] = my_house;
     return true;
   }
 
   function get_house_evaluator(uint _house_token) public returns (address evaluator) {
 
     return house_info[_house_token].house_evaluator;
+  }
+
+  function get_homeowner(uint _house_token) public returns (address homeowner) {
+
+    return house_info[_house_token].house_owner;
   }
 
   function get_yearly_stakeholder_dividend(uint _house_token) public returns (uint amount) {
@@ -157,7 +168,6 @@ contract Insurance {
 
     address_to_house_tokens[_house_owner].push(_house_token);
     house_info[_house_token] = my_house;
-
   }
 
   //Run a script that calls this function montly if 
