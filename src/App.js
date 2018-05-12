@@ -47,10 +47,6 @@ class App extends Component {
       this.addInsuranceContract()
       console.log('beast')
       // Instantiate contract once web3 provided.
-      //this.createInsuranceInstance
-      //this.instantiateContract()
-      //this.addClient(53)
-      //this.addEvaluation(53, 20, 4, 3)
     }).catch(() => {
       console.log('Error finding web3.')
     })
@@ -108,7 +104,6 @@ class App extends Component {
 
 
   // addClient(_house_token) {
-
   //   // Declaring this for later so we can chain functions on SimpleStorage.
   //         this.addInsuranceContract()
   //         var insuranceInstance = this.state.insuranceContract()
@@ -146,6 +141,7 @@ class App extends Component {
   //           console.log('Adding evaluator and house pricing info to house token')
   //           return insuranceInstance.add_evaluation(_house_token,
   //               _total_to_insure, _yearly_payment, _yearly_stakeholder_dividend, {from: accounts[0], gas:10000000})
+
   //         })
   //         .then((result) => {
   //           console.log('transaction completed')
@@ -156,6 +152,66 @@ class App extends Component {
   //         })
       
   // }
+
+  addClient(_house_token) {
+
+    const contract = require('truffle-contract')
+    const insurance = contract(InsuranceContract)
+    insurance.setProvider(this.state.web3.currentProvider)
+
+    // Declaring this for later so we can chain functions on SimpleStorage.
+    var insuranceInstance
+
+    // Get accounts.
+    this
+      .state
+      .web3
+      .eth
+      .getAccounts((error, accounts) => {
+        insurance
+          .deployed()
+          .then((instance) => {
+            this.state.web3.eth.defaultAccount = accounts[0]
+            insuranceInstance = instance
+
+            // Stores a given value, 5 by default.
+            return insuranceInstance.add_client_address({from: accounts[0], gas:100000})
+          })
+          // .then((result) => {
+          //   console.log('adding house 1')
+          //   return insuranceInstance.add_house_for_client(101, 10, 1, 1, 1, {from: accounts[0]})
+          // })
+          .then((result) => {
+            console.log('adding house 2')
+            return insuranceInstance.add_house_for_client(_house_token, {from: accounts[0]})
+          })
+          .then((result) => {
+            if (result === true) {
+              console.log('transaction completed')
+            }
+            else {
+              console.log('fuck you')
+            }
+            // Get the value from the contract to prove it worked.
+            return insuranceInstance
+              .get_address_to_house_tokens
+              .call(accounts[0])
+          })
+          //.then(sleep(1000))
+          .then((result) => {
+            console.dir(result)
+            // console.dir(result[0])
+            // console.dir(result[0].c)
+
+            // console.dir(result[0].c[0])
+            //console.dir(result.c)
+            //let house_id = result.c[0]
+            //console.log(house_id)
+            // Update state with the result.
+            //return this.setState({userHouseTokens: result.c[0]})
+          })
+      })
+  }
 
 
   createInsuranceInstance() {
@@ -380,6 +436,7 @@ class App extends Component {
 
 
   render() {
+    console.log(this.state.currentUser)
     let childProps = {
       isAuthenticated: this.state.isAuthenticated,
       userHasAuthenticated: this.userHasAuthenticated
