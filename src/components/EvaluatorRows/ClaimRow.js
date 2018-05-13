@@ -62,6 +62,9 @@ export default class ClaimRow extends Component {
 
   updateHouse(index, inputValue) {
 
+    console.log(this.state.ids)
+    console.log(index)
+    console.log(this.state.ids[index])
     var id = this.state.ids[index]
     var inputValue_as_int = parseInt(inputValue)
     var inputValue_as_bignumber = this.state.myweb3.toBigNumber(inputValue_as_int)

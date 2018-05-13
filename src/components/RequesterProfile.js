@@ -78,7 +78,7 @@ export default class RequesterProfile extends Component {
               <th>State</th>
               <th>Zip</th>
               <th>Total Value</th>
-              <th>Price</th>
+              <th>Quoted Premium</th>
               <th>Accept</th>
               <th>Decline</th>
             </tr>
@@ -105,7 +105,7 @@ export default class RequesterProfile extends Component {
               <th>State</th>
               <th>Zip</th>
               <th>Total Value</th>
-              <th>Price</th>
+              <th>Quoted Premium</th>
               <th>Amount Remaining</th>
               <th>Accept</th>
               <th>Decline</th>
@@ -132,7 +132,7 @@ export default class RequesterProfile extends Component {
               <th>State</th>
               <th>Zip</th>
               <th>Total Value</th>
-              <th>Price</th>
+              <th>Premium</th>
               <th>Days Remaining</th>
               <th>Request Claim</th>
             </tr>
