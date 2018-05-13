@@ -45,6 +45,7 @@ class App extends Component {
       this.setState({web3: results.web3})
 
       this.addInsuranceContract()
+      //this.addClient(100)
       console.log('beast')
       // Instantiate contract once web3 provided.
     }).catch(() => {
@@ -76,6 +77,7 @@ class App extends Component {
     console.log('adding insurance instance')
   }
 
+
   // add_house_for_client(uint _house_token, uint _total_to_insure, uint _minimum_stake_payment, uint _yearly_payment, 
   //   uint _yearly_stakeholder_dividend)
 
@@ -104,6 +106,7 @@ class App extends Component {
 
 
   // addClient(_house_token) {
+
   //   // Declaring this for later so we can chain functions on SimpleStorage.
   //         this.addInsuranceContract()
   //         var insuranceInstance = this.state.insuranceContract()

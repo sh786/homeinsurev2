@@ -323,7 +323,8 @@ export default class Eval extends Component {
               .insurancePlans
               .map(row => {
                 if (row["status"] === 5) {
-                  return <ClaimRow key={row.address} row={row}/>
+                  return <ClaimRow key={row.address} row={row}
+                      insuranceInstance={this.props.insuranceInstance} myweb3={this.props.myweb3}/>
               }
             })}
           </tbody>
