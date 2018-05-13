@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import firebase from 'firebase'
+import {writeHouseData, writeClientData, hash} from '../utils/firebase'
 
 const snapshotToArray = snapshot => Object.entries(snapshot).map(e => Object.assign(e[1], { key: e[0] }));
 
@@ -14,7 +15,9 @@ class TableRow extends Component {
       ids: props.ids,
       inputValue: "",
       row: props.row,
-      i: props.i
+      i: props.i,
+      myweb3: props.myweb3, 
+      insuranceInstance: props.insuranceInstance,
     }
     console.log(this.state)
   }
@@ -38,37 +41,105 @@ class TableRow extends Component {
 
   //TODO: Implement updateAmount function to breakup updateHouse/add_stake_for_stakeholder
 
+  addStakeForStakeholder(_stake_token, _house_token , _payment_expected) {
+
+    // Declaring this for later so we can chain functions on SimpleStorage.
+    var insuranceInstance
+
+    // Get accounts.
+    this
+      .state
+      .myweb3
+      .eth
+      .getAccounts((error, accounts) => {
+        this.state.insuranceInstance
+          .deployed()
+          .then((instance) => {
+            this.state.myweb3.eth.defaultAccount = accounts[0]
+            insuranceInstance = instance
+
+            console.log('Adding stake')
+            return insuranceInstance.add_stake_for_stakeholder(_stake_token,
+                _house_token, _payment_expected, {from: accounts[0], value: _payment_expected})
+          })
+          .then((result) => {
+            console.log('transaction completed')
+            // Get the value from the contract to prove it worked.
+            return insuranceInstance
+              .get_stake_amount
+              .call(_stake_token)
+          })
+          //.then(sleep(1000))
+          .then((result) => {
+            console.log('amount staked')
+            console.log(result.toNumber())
+            console.log(result)
+
+            // console.dir(result[0])
+            // console.dir(result[0].c)
+
+            // console.dir(result[0].c[0])
+            //console.dir(result.c)
+            //let house_id = result.c[0]
+            //console.log(house_id)
+            // Update state with the result.
+            //return this.setState({userHouseTokens: result.c[0]})
+          })
+      })
+  }
 
   updateHouse(index, buyAmount) {
-    var updates = {}
-    var id = this.state.ids[index]
-    var currRemaining = this.state.insurancePlans[index]["amountRemaining"]
-    var amountRemaining = currRemaining - buyAmount
+    if (buyAmount >= this.state.row.price*0.01){
+      var updates = {}
+      var id = this.state.ids[index]
+      var currRemaining = this.state.insurancePlans[index]["amountRemaining"]
+      var amountRemaining = currRemaining - buyAmount
+      var status = this.state.insurancePlans[index]["status"]
+      //may need to update status here
+      var newDays = this.state.insurancePlans[index]["daysRemaining"]
+      var quote = this.state.insurancePlans[index]["quote"]
+      var status = this.state.insurancePlans[index]["status"]
+      var address  = this.state.insurancePlans[index]["address"]
+      var city = this.state.insurancePlans[index]["city"]
+      var price = this.state.insurancePlans[index]["price"]
+      var state = this.state.insurancePlans[index]["state"]
+      var zip = this.state.insurancePlans[index]["zip"]
+      var h_id = this.state.insurancePlans[index]["homeowner_id"]
+      var updateData = {
+        address: address,
+        city: city,
+        price: price,
+        quote: quote,
+        state: state,
+        zip: zip,
+        homeowner_id: h_id,
+        status: status,
+        daysRemaining: newDays,
+        amountRemaining: amountRemaining,
+        status: status
+      }
+      updates['/houses/' + id] = updateData
+      this.state.insurancePlans[index] = updateData
+      this.state.row = updateData
+      this.setState({insurancePlans: this.state.insurancePlans})
 
-    var quote = this.state.insurancePlans[index]["quote"]
-    var status = this.state.insurancePlans[index]["status"]
-    var address  = this.state.insurancePlans[index]["address"]
-    var city = this.state.insurancePlans[index]["city"]
-    var price = this.state.insurancePlans[index]["price"]
-    var state = this.state.insurancePlans[index]["state"]
-    var zip = this.state.insurancePlans[index]["zip"]
-    var h_id = this.state.insurancePlans[index]["homeowner_id"]
-    var updateData = {
-      address: address,
-      city: city,
-      price: price,
-      quote: quote,
-      state: state,
-      zip: zip,
-      homeowner_id: h_id,
-      status: status,
-      amountRemaining: amountRemaining
+
+      var stake_token_as_string = String(id) + String(amountRemaining)
+      var stake_token = hash(stake_token_as_string)
+
+      var house_token = hash(id)
+      console.log('house token ' + house_token)
+      console.log('stake_token ' + stake_token)
+
+      var payment_expected = parseInt(buyAmount)
+
+      var payment_expected_as_bignumber = this.state.myweb3.toBigNumber(payment_expected)
+
+      this.addStakeForStakeholder(stake_token, house_token, this.state.myweb3.toWei(payment_expected_as_bignumber, 'ether'))
+
+
+      return firebase.database().ref().update(updates)
     }
-    updates['/houses/' + id] = updateData
-    this.state.insurancePlans[index] = updateData
-    this.state.row = updateData
-    this.setState({insurancePlans: this.state.insurancePlans})
-    return firebase.database().ref().update(updates)
   }
 
   render() {
@@ -78,13 +149,14 @@ class TableRow extends Component {
         <td key={this.state.row.city}>{this.state.row.city}</td>
         <td key={this.state.row.state}>{this.state.row.state}</td>
         <td key={this.state.row.zip}>{this.state.row.zip}</td>
-        <td key={this.state.row.quote}>{this.state.row.quote}</td>
-        <td key={this.state.row.amountRemaining}>{this.state.row.amountRemaining} ETH</td>
+        <td key="quote">{this.state.row.quote}</td>
+        <td key="price">{this.state.row.price}</td>
+        <td key="remaining">{this.state.row.amountRemaining} ETH</td>
         <td>
           <div className="field">
             <div className="control">
               <input className="input" id={"purchase"} type="text" 
-              placeholder="ETH Purchase" value={this.state.inputValue} onChange={evt => this.updateInputValue(evt)}/>
+              placeholder={"Min Purchase " + this.state.row.price*0.01} value={this.state.inputValue} onChange={evt => this.updateInputValue(evt)}/>
             </div>
           </div>
         </td>
@@ -141,7 +213,8 @@ export default class SellInsure extends Component {
               <th>City</th>
               <th>State</th>
               <th>Zip</th>
-              <th>Risk</th>
+              <th>Premium</th>
+              <th>Price of Home</th>
               <th>Amount Remaining</th>
               <th>Purchase</th>
             </tr>
@@ -152,7 +225,8 @@ export default class SellInsure extends Component {
               .insurancePlans
               .map(function(row, i) {
                 if (this.state.insurancePlans[i]["status"] == 3 && this.state.insurancePlans[i]["amountRemaining"] > 0){
-                  return (<TableRow key={row.address} row={row} i={i} plans={this.state.insurancePlans} ids={this.state.ids}/>)
+                  return (<TableRow key={row.address} row={row} i={i} plans={this.state.insurancePlans} ids={this.state.ids}
+                        myweb3={this.props.myweb3} insuranceInstance={this.props.insuranceInstance}/>)
                 }
               }, this)}
           </tbody>

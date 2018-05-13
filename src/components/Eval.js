@@ -1,6 +1,11 @@
 import React, {Component} from 'react'
 import firebase from 'firebase'
 
+import {hash} from '../utils/firebase'
+
+import InsuranceContract from '../../build/contracts/Insurance.json'
+import getWeb3 from '../utils/getWeb3'
+
 const snapshotToArray = snapshot => Object
   .entries(snapshot)
   .map(e => Object.assign(e[1], {key: e[0]}));
@@ -18,14 +23,16 @@ class TableRow extends Component {
       ids: props.ids,
       inputValue: "",
       row: props.row,
-      i: props.i
+      i: props.i,
+      myweb3: props.myweb3,
+      insuranceInstance: props.insuranceInstance,
     }
     console.log(this.state)
   }
 
   updateInputValue(evt) {
     this.setState({inputValue: evt.target.value})
-    console.log(this.state.inputValue)
+    //console.log(this.state.inputValue)
   }
 
   getAverage(quotes) {
@@ -41,23 +48,92 @@ class TableRow extends Component {
     return ret
   }
 
+  addClient(_house_token, _total_to_insure, _yearly_payment, _yearly_stakeholder_dividend) {
+    var insuranceInstance
+
+    this
+      .state
+      .myweb3
+      .eth
+      .getAccounts((error, accounts) => {
+        this.state.insuranceInstance
+          .deployed()
+          .then((instance) => {
+            console.log(instance)
+            insuranceInstance = instance
+            
+            console.log('adding a house with house_token' + _house_token)
+            return insuranceInstance.add_house_for_client(_house_token, {from: accounts[0]})
+          })
+          .then((result) => {
+              console.log(result)
+            // Get the value from the contract to prove it worked.
+            return insuranceInstance
+              .get_address_to_house_tokens
+              .call(accounts[0])
+          })
+          //.then(sleep(1000))
+          .then((result) => {
+            console.dir(result)
+          })
+          .then((result) => {
+            this.addEvaluation(_house_token, _total_to_insure, _yearly_payment, _yearly_stakeholder_dividend)
+          })
+      })
+
+      // this.addEvaluation(_house_token, _total_to_insure, _yearly_payment, _yearly_stakeholder_dividend)
+  }
+
+  addEvaluation(_house_token, _total_to_insure, _yearly_payment, _yearly_stakeholder_dividend) {
+    var insuranceInstance
+    // Get accounts.
+    this
+      .state
+      .myweb3
+      .eth
+      .getAccounts((error, accounts) => {
+        this.state.insuranceInstance
+          .deployed()
+          .then((instance) => {
+            this.state.myweb3.eth.defaultAccount = accounts[0]
+            insuranceInstance = instance
+
+            console.log('Adding evaluator and house pricing info to house token')
+            return insuranceInstance.add_evaluation(_house_token,
+                _total_to_insure, _yearly_payment, _yearly_stakeholder_dividend, {from: accounts[0]})
+          })
+          .then((result) => {
+            console.log('transaction completed')
+            // Get the value from the contract to prove it worked.
+            return insuranceInstance
+              .get_yearly_stakeholder_dividend
+              .call(_house_token)
+          })
+          //.then(sleep(1000))
+          .then((result) => {
+            console.log('stakeholder dividend')
+            console.dir(result)
+            // console.dir(result[0])
+            // console.dir(result[0].c)
+
+            // console.dir(result[0].c[0])
+            //console.dir(result.c)
+            //let house_id = result.c[0]
+            //console.log(house_id)
+            // Update state with the result.
+            //return this.setState({userHouseTokens: result.c[0]})
+          })
+      })
+  }
+
+
+
+  //quote comes in in units of ether 
   updateHouse(index, quote) {
     var updates = {}
     var id = this.state.ids[index]
-    var currQuote = this.state.insurancePlans[index]["quote"]
-    var status = this.state.insurancePlans[index]["status"]
-    var quotes = currQuote.split(":")
-    var newQuote = currQuote + quote + ":"
-    if (currQuote.length > 0 && quotes.length === 1) {
-      newQuote =//can adjust to maybe exclude outliers or take in more evaluations
-      currQuote
-    } else if (quotes.length > 4) {
-      quotes.pop()
-      quotes.push(quote)
-      newQuote = this.getAverage(quotes)
-      status = 2
-    }
-    console.log(newQuote)
+
+    var newQuote = quote
     var address = this.state.insurancePlans[index]["address"]
     var city = this.state.insurancePlans[index]["city"]
     var price = this.state.insurancePlans[index]["price"]
@@ -73,17 +149,48 @@ class TableRow extends Component {
       state: state,
       zip: zip,
       homeowner_id: h_id,
-      status: status,
+      status: 2,
       amountRemaining: amountRemaining
     }
     updates['/houses/' + id] = updateData
     var temp = this.state.insurancePlans
     temp[index] = updateData
     this.setState({insurancePlans: temp})
+
+
+    var house_token = hash(id)
+    console.log('house token ' + house_token)
+    console.log('id ' + id)
+    var quote_as_int = parseInt(quote)
+
+    console.log(this.state.myweb3)
+    var quote_as_bignumber = this.state.myweb3.toBigNumber(quote_as_int)
+
+    var stakeholder_dividend = quote_as_bignumber.times(0.95)
+
+
+    var price_as_int = parseInt(price)
+    var price_as_bignumber = this.state.myweb3.toBigNumber(price_as_int)
+    // console.log('price' + price_as_bignumber)
+    // console.log('quote' + quote_as_bignumber)
+    // console.log('stakeholder_dividend' + stakeholder_dividend)
+    console.log('price' + this.state.myweb3.toWei(price_as_bignumber, 'ether'))
+    console.log('quote' + this.state.myweb3.toWei(quote_as_bignumber, 'ether'))
+    console.log('stakeholder_dividend' + this.state.myweb3.toWei(stakeholder_dividend, 'ether'))
+
+    //asynchronous code fucking me over
+    this.addClient(house_token, this.state.myweb3.toWei(price_as_bignumber, 'ether'), 
+        this.state.myweb3.toWei(quote_as_bignumber, 'ether'), this.state.myweb3.toWei(stakeholder_dividend, 'ether'))
+    // this.addEvaluation(house_token, this.state.myweb3.toWei(price_as_bignumber, 'ether'), 
+    //     this.state.myweb3.toWei(quote_as_bignumber, 'ether'), this.state.myweb3.toWei(stakeholder_dividend, 'ether'))
+    
     return firebase
       .database()
       .ref()
       .update(updates)
+
+    
+
   }
 
   render() {
@@ -133,12 +240,16 @@ export default class Eval extends Component {
 
     this.state = {
       insurancePlans: [],
-      ids: []
+      ids: [],
+      myweb3: props.myweb3,
+      insuranceInstance: props.insuranceInstance,
     }
+
   }
 
   componentWillMount() {
     // this.getInsurancePlans()
+
     let comp = this;
     let housesRef = firebase
       .database()
@@ -156,6 +267,8 @@ export default class Eval extends Component {
   }
 
   render() {
+    console.log(this.props.myweb3)
+    console.log(this.props.insuranceInstance)
     return (
       <div>
         <h5 className="title is-5 requester">Homes waiting on quote evaluation</h5>
@@ -182,7 +295,10 @@ export default class Eval extends Component {
                     row={row}
                     i={i}
                     plans={this.state.insurancePlans}
-                    ids={this.state.ids}/>)
+                    ids={this.state.ids}
+                    myweb3={this.props.myweb3}
+                    insuranceInstance={this.props.insuranceInstance}
+                    />)
                 }
               }, this)
 }
@@ -207,7 +323,8 @@ export default class Eval extends Component {
               .insurancePlans
               .map(row => {
                 if (row["status"] === 5) {
-                  return <ClaimRow key={row.address} row={row}/>
+                  return <ClaimRow key={row.address} row={row}
+                      insuranceInstance={this.props.insuranceInstance} myweb3={this.props.myweb3}/>
               }
             })}
           </tbody>

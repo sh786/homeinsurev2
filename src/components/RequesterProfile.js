@@ -16,7 +16,9 @@ export default class RequesterProfile extends Component {
 
     this.state = {
       insurancePlans: [],
-      ids: []
+      ids: [],
+      myweb3: props.myweb3,
+      insuranceInstance: props.insuranceInstance,
     }
   }
 
@@ -87,7 +89,8 @@ export default class RequesterProfile extends Component {
               .insurancePlans
               .map((row, i) => {
                 if (row["status"] === 2 && row["homeowner_id"] === this.props.currentUser.username) {
-                  return <TableRowAccepting key={row.address} row={row} i={i} id={this.state.ids[i]}/>
+                  return <TableRowAccepting key={row.address} row={row} i={i} id={this.state.ids[i]} 
+                      myweb3={this.props.myweb3} insuranceInstance={this.props.insuranceInstance}/>
                 }
               })
             }
@@ -114,7 +117,8 @@ export default class RequesterProfile extends Component {
               .insurancePlans
               .map((row, i) => {
                 if (row["status"] === 3 && row["homeowner_id"] === this.props.currentUser.username) {
-                  return <TableRowFunding key={row.address} row={row} id={this.state.ids[i]}/>
+                  return <TableRowFunding key={row.address} row={row} id={this.state.ids[i]} 
+                      myweb3={this.props.myweb3} insuranceInstance={this.props.insuranceInstance}/>
               }
             })}
           </tbody>
@@ -139,7 +143,8 @@ export default class RequesterProfile extends Component {
               .insurancePlans
               .map((row, i) => {
                 if (row["status"] === 4 && row["homeowner_id"] === this.props.currentUser.username) {
-                  return <TableRowActive key={row.address} row={row} i={i} id={this.state.ids[i]}/>
+                  return <TableRowActive key={row.address} row={row} i={i} id={this.state.ids[i]}
+                      myweb3={this.props.myweb3} insuranceInstance={this.props.insuranceInstance}/>
               }
             })}
           </tbody>

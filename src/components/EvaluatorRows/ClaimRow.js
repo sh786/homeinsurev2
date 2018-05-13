@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {removeHouse} from '../../utils/firebase'
+import {removeHouse, hash} from '../../utils/firebase'
 import firebase from 'firebase'
 
 export default class ClaimRow extends Component {
@@ -13,9 +13,44 @@ export default class ClaimRow extends Component {
       ids: props.ids,
       inputValue: "",
       row: props.row,
-      i: props.i
+      i: props.i,
+      insuranceInstance: props.insuranceInstance,
+      myweb3: props.myweb3,
     }
     console.log(this.state)
+  }
+
+  evaluateInsuranceClaim(_house_token, _claim_amount) {
+
+    // Declaring this for later so we can chain functions on SimpleStorage.
+    var insuranceInstance
+
+    // Get accounts.
+    this
+      .state
+      .myweb3
+      .eth
+      .getAccounts((error, accounts) => {
+        this.state.insuranceInstance
+          .deployed()
+
+          .then((instance) => {
+            this.state.myweb3.eth.defaultAccount = accounts[0]
+            insuranceInstance = instance
+
+            console.log('Adding stake')
+            return insuranceInstance.create_insurance_claim.call(
+                _house_token, _claim_amount, {from: accounts[0]})
+          })
+          .then((result) => {
+            console.log('transaction completed')
+            //if declined, true
+            console.log(result)
+            return insuranceInstance.create_insurance_claim(
+                _house_token, _claim_amount, {from: accounts[0]})
+          })
+
+      })
   }
 
   updateInputValue(evt) {
@@ -25,10 +60,17 @@ export default class ClaimRow extends Component {
     console.log(this.state.inputValue)
   }
 
-  updateHouse(index, quote) {
-    // change status of home to claimed
+  updateHouse(index, inputValue) {
 
-    // enter in a claim amount
+    var id = this.state.ids[index]
+    var inputValue_as_int = parseInt(inputValue)
+    var inputValue_as_bignumber = this.state.myweb3.toBigNumber(inputValue_as_int)
+
+    var house_token = hash(id)
+    var inputValue_as_wei = this.state.myweb3.toWei(inputValue_as_bignumber, 'ether')
+
+    this.evaluateInsuranceClaim(house_token, inputValue_as_wei)
+
   }
 
   render() {

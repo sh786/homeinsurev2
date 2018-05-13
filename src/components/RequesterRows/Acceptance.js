@@ -10,7 +10,9 @@ export default class TableRowAccepting extends Component {
     this.state = {
       row: props.row,
       i: props.i,
-      id: props.id
+      id: props.id,
+      myweb3: props.myweb3,
+      insuranceInstance: props.insuranceInstance,
     }
   }
 
@@ -26,7 +28,8 @@ export default class TableRowAccepting extends Component {
     var price = this.state.row["price"]
     var state = this.state.row["state"]
     var zip = this.state.row["zip"]
-    var daysRem = this.state.row["daysRemaining"]
+    //var daysRem = this.state.row["daysRemaining"]
+    var daysRem = 30
     var updateData = {
       homeowner_id: homeowner_id,
       address: address,

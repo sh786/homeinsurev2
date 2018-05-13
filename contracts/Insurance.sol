@@ -3,25 +3,6 @@ pragma solidity ^0.4.2;
 contract Insurance {
 
 
-  event Error (bytes32 description);
-
-  event House_Fully_Insured_Success (uint house_token, uint[] stake_tokens);
-
-  event House_Failed_To_Insure (uint house_token, uint[] stake_tokens);
-  // event House_Fully_Insured_Success (uint house_token, address house_owner,
-  //     uint[] stake_tokens, address[] stakeholders);
-
-  // event House_Failed_To_Insure (uint house_token, address house_owner,
-  //     uint[] stake_tokens, address[] stakeholders);
-
-  event yearly_House_Payment_Success (uint house_token, uint timestamtimestamp);
-
-  event yearly_House_Payment_Failed (uint house_token, uint , bytes32 error);
-
-  event Stake_Contribution (uint stake_token, uint stake_amount_insured);
-
-  event Stake_Contribution_Fail (uint stake_token, uint stake_amount_insured);
-
 
   address public company_address;
 
@@ -37,9 +18,7 @@ contract Insurance {
 
     //In Wei
     uint total_to_insure;
-
-    //Percentage
-    uint percentage_insured;
+    uint total_currently_insured;
 
     uint[] stake_tokens;
 
@@ -69,9 +48,8 @@ contract Insurance {
     //uint stake_token;
     uint house_token;
     address stake_owner;
-    // In ether?
+    // In Wei?
     uint amount_insured;
-    uint percentage_staked;
   }
 
   //Bidirectional Mapping: may not be needed 
@@ -96,6 +74,8 @@ contract Insurance {
   mapping(address => uint[]) public address_to_stake_tokens;
 
   mapping(uint => Stake) public stake_info;
+
+  uint public num_things = 0;
   //uint[] private insurer_tokens;
 
   //address[] public insurers;
@@ -115,11 +95,9 @@ contract Insurance {
   */
 
   //Getters and setters for all mappings above
-  //
 
 
   function add_client_address() public {
-    //client_addresses.push(_house_owner);
     address_to_house_tokens[msg.sender] = new uint[](0);
   }
 
@@ -135,6 +113,7 @@ contract Insurance {
     my_house.total_to_insure = _total_to_insure;
     my_house.yearly_payment = _yearly_payment;
     my_house.yearly_stakeholder_dividend = _yearly_stakeholder_dividend;
+    house_info[_house_token] = my_house;
     return true;
   }
 
@@ -143,26 +122,36 @@ contract Insurance {
     return house_info[_house_token].house_evaluator;
   }
 
+  function get_homeowner(uint _house_token) public returns (address homeowner) {
+
+    return house_info[_house_token].house_owner;
+  }
+
+
   function get_yearly_stakeholder_dividend(uint _house_token) public returns (uint amount) {
     return house_info[_house_token].yearly_stakeholder_dividend;
+  }
+
+  function get_stake_amount(uint _stake_token) public returns (uint amount) {
+    return stake_info[_stake_token].amount_insured;
   }
 
   //When database hits submit, we add data to the chain  
   function add_house_for_client(uint _house_token) public {
 
     address _house_owner = msg.sender;
-    House memory my_house = House({house_owner: _house_owner, total_to_insure: 0, 
-        percentage_insured: 0, stake_tokens: new uint[](0), yearly_payment: 0, yearly_stakeholder_dividend: 0, 
+    House memory my_house = House({house_owner: _house_owner, total_to_insure: 0, total_currently_insured: 0, 
+        stake_tokens: new uint[](0), yearly_payment: 0, yearly_stakeholder_dividend: 0, 
         is_fully_insured: false, payment_for_year_completed:false, house_evaluator: company_address, is_claim_active:false, claim_amount: 0});
 
+    //if (add_client_address)
     address_to_house_tokens[_house_owner].push(_house_token);
     house_info[_house_token] = my_house;
-
   }
 
   //Run a script that calls this function montly if 
   //Also call this if the user declines their quote 
-  function check_house_expired_or_declined(uint _house_token) returns (bool success){
+  function check_house_expired_or_declined(uint _house_token, bool is_declined) returns (bool success){
     
     House memory my_house = house_info[_house_token];
 
@@ -170,7 +159,7 @@ contract Insurance {
       return false;
     }
 
-    if (!my_house.is_fully_insured) {
+    if (!my_house.is_fully_insured || is_declined) {
       uint[] memory my_stake_tokens = my_house.stake_tokens;
 
       //length_stake_tokent = 
@@ -211,22 +200,16 @@ contract Insurance {
     uint timestamp = block.timestamp;
     //Check if address of sender matches home owner
     if (msg.sender != my_house.house_owner){
-      bytes32 error1 = "Homeowner does not match address";
-      emit yearly_House_Payment_Failed(_house_token, timestamp, error1);
       msg.sender.transfer(msg.value);
       return false;
     }
 
     if (!my_house.is_fully_insured) {
-      bytes32 error4 = "Home not yet fully insured";
-      emit yearly_House_Payment_Failed(_house_token, timestamp, error4);
       msg.sender.transfer(msg.value);
       return false;
     }
 
     if (my_house.payment_for_year_completed){
-      bytes32 error2 = "Payment already completed";
-      emit yearly_House_Payment_Failed(_house_token, timestamp, error2);
       msg.sender.transfer(msg.value);
       return false;
     }
@@ -234,8 +217,6 @@ contract Insurance {
     //Maintain that payment amount by sender matches  
     uint my_yearly_payment = my_house.yearly_payment;
     if (msg.value < my_yearly_payment) {
-      bytes32 error3 = "Payment not sufficient";
-      emit yearly_House_Payment_Failed(_house_token, timestamp, error3);
       msg.sender.transfer(msg.value);
       return false;
     }
@@ -246,8 +227,13 @@ contract Insurance {
       msg.sender.transfer(difference);
     }
 
-    return payout_stakeholders(_house_token);
+    house_info[_house_token] = my_house;
 
+    return payout_stakeholders(_house_token);
+  }
+
+  function get_payment_for_year_completed(uint _house_token) returns (bool success) {
+    return house_info[_house_token].payment_for_year_completed;
   }
 
   function payout_stakeholders(uint _house_token) internal returns (bool success){
@@ -256,9 +242,8 @@ contract Insurance {
     uint my_yearly_dividend = my_house.yearly_stakeholder_dividend;
     for (uint j = 0; j < my_stake_tokens.length; j++) {
       Stake memory my_stake = stake_info[my_stake_tokens[j]];
-      uint dividend_amount = my_stake.percentage_staked;
       address stake_owner = my_stake.stake_owner;
-      uint total_payout = uint(my_yearly_dividend * dividend_amount / (100));
+      uint total_payout = uint(my_yearly_dividend * my_stake.amount_insured/my_house.total_to_insure);
       stake_owner.transfer(total_payout);
     }
     return true;
@@ -273,6 +258,8 @@ contract Insurance {
     }
     my_house.is_claim_active = true;
     my_house.claim_amount = _claim_amount;
+    house_info[_house_token] = my_house;
+
     return accept_insurance_claim(_house_token);
 
   }
@@ -288,9 +275,8 @@ contract Insurance {
     uint[] memory my_stake_tokens = my_house.stake_tokens;
     for (uint j = 0; j < my_stake_tokens.length; j++) {
       Stake memory my_stake = stake_info[my_stake_tokens[j]];
-      uint dividend_amount = my_stake.percentage_staked;
       address stake_owner = my_stake.stake_owner;
-      uint total_payout = uint(remaining_payout * dividend_amount / (100));
+      uint total_payout = uint(remaining_payout * my_stake.amount_insured/my_house.total_to_insure);
       stake_owner.transfer(total_payout);
     }
 
@@ -306,8 +292,8 @@ contract Insurance {
   //   address_to_stake_tokens[_stakeholder_address] = new uint[](0);
   // }
 
-  function add_stake_for_stakeholder(uint _stake_token, uint _house_token, uint percentage_purchased) public payable returns (bool success){
-    //TODO: Calculate percentage_staked
+  //payment_expected in WEI
+  function add_stake_for_stakeholder(uint _stake_token, uint _house_token, uint payment_expected) public payable returns (bool success){
     address _stake_owner = msg.sender;
 
     House memory house = house_info[_house_token];
@@ -316,41 +302,40 @@ contract Insurance {
       return false;
     }
 
-    uint remaining_to_insure = 100 - house.percentage_insured;
-    if (percentage_purchased > remaining_to_insure) {
+    uint remaining_to_insure = house.total_to_insure - (payment_expected + house.total_currently_insured);
+
+    if (remaining_to_insure < 0) {
       msg.sender.transfer(msg.value);
       //emit Stake_Contribution_Fail(_stake_token, msg.value);
       return false;
     }
 
     
-
-    uint payment_due = (house.total_to_insure * percentage_purchased / 100);
-
-    if (payment_due > msg.value) { 
+    if (payment_expected > msg.value) { 
       msg.sender.transfer(msg.value);
-      emit Stake_Contribution_Fail (_stake_token, msg.value);
       return false;
     }
 
-    if (payment_due <= msg.value) {
-      uint over_payment = msg.value - payment_due;
-      emit Stake_Contribution (_stake_token, msg.value);
+    if (payment_expected <= msg.value) {
+      uint over_payment = msg.value - payment_expected;
       if (over_payment > 0) {
         msg.sender.transfer(over_payment);
       }
     }
 
-    house.percentage_insured = house.percentage_insured + percentage_purchased;
-    if (house.percentage_insured == 100) {
+    house.total_currently_insured = house.total_currently_insured + msg.value;
+
+    if (house.total_currently_insured == house.total_to_insure) {
       house.is_fully_insured = true;
     }
 
     Stake memory stake = Stake({house_token: _house_token, stake_owner: _stake_owner,
-      amount_insured: payment_due, percentage_staked: percentage_purchased});
+      amount_insured: msg.value});
     
     address_to_stake_tokens[_stake_owner].push(_stake_token);
     stake_info[_stake_token] = stake;
+    house_info[_house_token] = house;
+
     return true;
 
   }
