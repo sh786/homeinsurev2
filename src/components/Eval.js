@@ -267,8 +267,7 @@ export default class Eval extends Component {
   }
 
   render() {
-    console.log(this.props.myweb3)
-    console.log(this.props.insuranceInstance)
+    console.log('i' + this.state.i)
     return (
       <div>
         <h5 className="title is-5 requester">Homes waiting on quote evaluation</h5>
@@ -321,9 +320,9 @@ export default class Eval extends Component {
           {this
               .state
               .insurancePlans
-              .map(row => {
+              .map((row, i) => {
                 if (row["status"] === 5) {
-                  return <ClaimRow key={row.address} row={row}
+                  return <ClaimRow key={row.address} row={row} ids={this.state.ids} i={i} 
                       insuranceInstance={this.props.insuranceInstance} myweb3={this.props.myweb3}/>
               }
             })}
