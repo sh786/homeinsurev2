@@ -161,12 +161,12 @@ export default class TableRowFunding extends Component {
   render() {
     return (
       <tr>
-        <td key={this.state.row.address}>{this.state.row.address}</td>
-        <td key={this.state.row.city}>{this.state.row.city}</td>
-        <td key={this.state.row.state}>{this.state.row.state}</td>
-        <td key={this.state.row.zip}>{this.state.row.zip}</td>
-        <td key={this.state.row.price}>{this.state.row.price}</td>
-        <td key={this.state.row.quote}>{this.state.row.quote}</td>
+        <td key="address">{this.state.row.address}</td>
+        <td key="city">{this.state.row.city}</td>
+        <td key="state">{this.state.row.state}</td>
+        <td key="zip">{this.state.row.zip}</td>
+        <td key="price">{this.state.row.price}</td>
+        <td key="quote">{this.state.row.quote}</td>
         <td key='remaining'>{this.state.row.amountRemaining}</td>
         <td>
           <div className="field">
