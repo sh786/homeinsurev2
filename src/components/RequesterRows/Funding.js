@@ -81,6 +81,7 @@ export default class TableRowFunding extends Component {
           })
           //.then(sleep(1000))
           .then((result) => {
+            this.updateHouse()
             console.log('amount paid')
             console.log(result)
 
@@ -122,6 +123,7 @@ export default class TableRowFunding extends Component {
           })
           .then((result) => {
             console.log('transaction completed')
+            removeHouse(this.state.id);
             //if declined, true
             console.log(result)
             return insuranceInstance.check_house_expired_or_declined(
@@ -147,7 +149,7 @@ export default class TableRowFunding extends Component {
 
     //TODO: Client should pay in this function
     //status needs to get changed and money needs to go into the contract
-    this.updateHouse()
+    
   }
 
   declineQuote() {
@@ -155,7 +157,6 @@ export default class TableRowFunding extends Component {
     var house_token = hash(id)
 
     this.checkHouseExpiredOrDeclined(house_token)
-    removeHouse(this.state.id);
   }
 
   render() {
