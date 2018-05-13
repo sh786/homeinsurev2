@@ -60,8 +60,6 @@ class TableRow extends Component {
           .deployed()
           .then((instance) => {
             console.log(instance)
-
-            this.state.myweb3.eth.defaultAccount = accounts[0]
             insuranceInstance = instance
             
             console.log('adding a house with house_token' + _house_token)

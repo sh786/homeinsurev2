@@ -3,25 +3,6 @@ pragma solidity ^0.4.2;
 contract Insurance {
 
 
-  event Error (bytes32 description);
-
-  event House_Fully_Insured_Success (uint house_token, uint[] stake_tokens);
-
-  event House_Failed_To_Insure (uint house_token, uint[] stake_tokens);
-  // event House_Fully_Insured_Success (uint house_token, address house_owner,
-  //     uint[] stake_tokens, address[] stakeholders);
-
-  // event House_Failed_To_Insure (uint house_token, address house_owner,
-  //     uint[] stake_tokens, address[] stakeholders);
-
-  event yearly_House_Payment_Success (uint house_token, uint timestamtimestamp);
-
-  event yearly_House_Payment_Failed (uint house_token, uint , bytes32 error);
-
-  event Stake_Contribution (uint stake_token, uint stake_amount_insured);
-
-  event Stake_Contribution_Fail (uint stake_token, uint stake_amount_insured);
-
 
   address public company_address;
 
@@ -67,7 +48,7 @@ contract Insurance {
     //uint stake_token;
     uint house_token;
     address stake_owner;
-    // In ether?
+    // In Wei?
     uint amount_insured;
   }
 
@@ -114,14 +95,9 @@ contract Insurance {
   */
 
   //Getters and setters for all mappings above
-  //
-  function get_num_things() public returns (uint){
-    return num_things; 
-  }
 
 
   function add_client_address() public {
-    //client_addresses.push(_house_owner);
     address_to_house_tokens[msg.sender] = new uint[](0);
   }
 
@@ -151,8 +127,13 @@ contract Insurance {
     return house_info[_house_token].house_owner;
   }
 
+
   function get_yearly_stakeholder_dividend(uint _house_token) public returns (uint amount) {
     return house_info[_house_token].yearly_stakeholder_dividend;
+  }
+
+  function get_stake_amount(uint _stake_token) public returns (uint amount) {
+    return stake_info[_stake_token].amount_insured;
   }
 
   //When database hits submit, we add data to the chain  
@@ -163,13 +144,14 @@ contract Insurance {
         stake_tokens: new uint[](0), yearly_payment: 0, yearly_stakeholder_dividend: 0, 
         is_fully_insured: false, payment_for_year_completed:false, house_evaluator: company_address, is_claim_active:false, claim_amount: 0});
 
+    //if (add_client_address)
     address_to_house_tokens[_house_owner].push(_house_token);
     house_info[_house_token] = my_house;
   }
 
   //Run a script that calls this function montly if 
   //Also call this if the user declines their quote 
-  function check_house_expired_or_declined(uint _house_token) returns (bool success){
+  function check_house_expired_or_declined(uint _house_token, bool is_declined) returns (bool success){
     
     House memory my_house = house_info[_house_token];
 
@@ -177,7 +159,7 @@ contract Insurance {
       return false;
     }
 
-    if (!my_house.is_fully_insured) {
+    if (!my_house.is_fully_insured || is_declined) {
       uint[] memory my_stake_tokens = my_house.stake_tokens;
 
       //length_stake_tokent = 
@@ -218,22 +200,16 @@ contract Insurance {
     uint timestamp = block.timestamp;
     //Check if address of sender matches home owner
     if (msg.sender != my_house.house_owner){
-      bytes32 error1 = "Homeowner does not match address";
-      emit yearly_House_Payment_Failed(_house_token, timestamp, error1);
       msg.sender.transfer(msg.value);
       return false;
     }
 
     if (!my_house.is_fully_insured) {
-      bytes32 error4 = "Home not yet fully insured";
-      emit yearly_House_Payment_Failed(_house_token, timestamp, error4);
       msg.sender.transfer(msg.value);
       return false;
     }
 
     if (my_house.payment_for_year_completed){
-      bytes32 error2 = "Payment already completed";
-      emit yearly_House_Payment_Failed(_house_token, timestamp, error2);
       msg.sender.transfer(msg.value);
       return false;
     }
@@ -241,8 +217,6 @@ contract Insurance {
     //Maintain that payment amount by sender matches  
     uint my_yearly_payment = my_house.yearly_payment;
     if (msg.value < my_yearly_payment) {
-      bytes32 error3 = "Payment not sufficient";
-      emit yearly_House_Payment_Failed(_house_token, timestamp, error3);
       msg.sender.transfer(msg.value);
       return false;
     }
@@ -256,6 +230,10 @@ contract Insurance {
     house_info[_house_token] = my_house;
 
     return payout_stakeholders(_house_token);
+  }
+
+  function get_payment_for_year_completed(uint _house_token) returns (bool success) {
+    return house_info[_house_token].payment_for_year_completed;
   }
 
   function payout_stakeholders(uint _house_token) internal returns (bool success){
@@ -335,14 +313,12 @@ contract Insurance {
     
     if (payment_expected > msg.value) { 
       msg.sender.transfer(msg.value);
-      emit Stake_Contribution_Fail(_stake_token, msg.value);
       return false;
     }
 
     if (payment_expected <= msg.value) {
       uint over_payment = msg.value - payment_expected;
       if (over_payment > 0) {
-        emit Stake_Contribution(_stake_token, msg.value);
         msg.sender.transfer(over_payment);
       }
     }
