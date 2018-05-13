@@ -12,7 +12,7 @@ export const init = () => {
   database = firebase.database()
 }
 
-function hash(str) {
+export function hash(str) {
   var hash = 5381,
       i    = str.length;
   while(i) {
