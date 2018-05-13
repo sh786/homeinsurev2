@@ -356,7 +356,7 @@ export default class RequestInsure extends Component {
               <input
                 className="input"
                 type="integer"
-                placeholder="Price of House"
+                placeholder="Price of Home (ETH)"
                 ref="price"/>
             </div>
           </div>

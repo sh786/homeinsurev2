@@ -55,10 +55,10 @@ export default class Nav extends Component {
             {(this.props.isAuthenticated && this.props.currentUser.username !== '8cf69f19-9be1-404e-83d8-ed1f064a035f')
               ? <div className="navbar-end">
                   <Link className="navbar-item has-text-white" to='/request'>
-                    Buyer
+                    Request
                   </Link>
                   <Link className="navbar-item has-text-white" to='/sell'>
-                    Seller
+                    Invest
                   </Link>
                   <Link className="navbar-item has-text-white" to='/requester-profile'>
                     My Plans
