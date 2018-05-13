@@ -94,9 +94,9 @@ class TableRow extends Component {
       var id = this.state.ids[index]
       var currRemaining = this.state.insurancePlans[index]["amountRemaining"]
       var amountRemaining = currRemaining - buyAmount
-
-
-
+      var status = this.state.insurancePlans[index]["status"]
+      //may need to update status here
+      var newDays = this.state.insurancePlans[index]["daysRemaining"]
       var quote = this.state.insurancePlans[index]["quote"]
       var status = this.state.insurancePlans[index]["status"]
       var address  = this.state.insurancePlans[index]["address"]
@@ -114,7 +114,9 @@ class TableRow extends Component {
         zip: zip,
         homeowner_id: h_id,
         status: status,
-        amountRemaining: amountRemaining
+        daysRemaining: newDays,
+        amountRemaining: amountRemaining,
+        status: status
       }
       updates['/houses/' + id] = updateData
       this.state.insurancePlans[index] = updateData
