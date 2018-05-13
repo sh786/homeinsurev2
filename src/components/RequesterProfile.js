@@ -62,9 +62,9 @@ export default class RequesterProfile extends Component {
             {this
               .state
               .insurancePlans
-              .map(row => {
+              .map((row, i) => {
                 if (row["status"] === 1 && row["homeowner_id"] === this.props.currentUser.username) {
-                  return <TableRowWaiting key={row.address} row={row}/>
+                  return <TableRowWaiting key={i} row={row}/>
                 }
               })}
           </tbody>
@@ -89,7 +89,7 @@ export default class RequesterProfile extends Component {
               .insurancePlans
               .map((row, i) => {
                 if (row["status"] === 2 && row["homeowner_id"] === this.props.currentUser.username) {
-                  return <TableRowAccepting key={row.address} row={row} i={i} id={this.state.ids[i]} 
+                  return <TableRowAccepting key={i} row={row} i={i} id={this.state.ids[i]} 
                       myweb3={this.props.myweb3} insuranceInstance={this.props.insuranceInstance}/>
                 }
               })
@@ -117,7 +117,7 @@ export default class RequesterProfile extends Component {
               .insurancePlans
               .map((row, i) => {
                 if (row["status"] === 3 && row["homeowner_id"] === this.props.currentUser.username) {
-                  return <TableRowFunding key={row.address} row={row} id={this.state.ids[i]} 
+                  return <TableRowFunding key={i} row={row} id={this.state.ids[i]} 
                       myweb3={this.props.myweb3} insuranceInstance={this.props.insuranceInstance}/>
               }
             })}
@@ -143,7 +143,7 @@ export default class RequesterProfile extends Component {
               .insurancePlans
               .map((row, i) => {
                 if (row["status"] === 4 && row["homeowner_id"] === this.props.currentUser.username) {
-                  return <TableRowActive key={row.address} row={row} i={i} id={this.state.ids[i]}
+                  return <TableRowActive key={i} row={row} i={i} id={this.state.ids[i]}
                       myweb3={this.props.myweb3} insuranceInstance={this.props.insuranceInstance}/>
               }
             })}

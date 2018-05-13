@@ -74,6 +74,7 @@ class TableRow extends Component {
             console.log('amount staked')
             console.log(result.toNumber())
             console.log(result)
+            this.updateHouse(this.state.i, this.state.inputValue)
 
             // console.dir(result[0])
             // console.dir(result[0].c)
@@ -89,7 +90,6 @@ class TableRow extends Component {
   }
 
   updateHouse(index, buyAmount) {
-    if (buyAmount >= this.state.row.price*0.01){
       var updates = {}
       var id = this.state.ids[index]
       var currRemaining = this.state.insurancePlans[index]["amountRemaining"]
@@ -122,8 +122,17 @@ class TableRow extends Component {
       this.state.insurancePlans[index] = updateData
       this.state.row = updateData
       this.setState({insurancePlans: this.state.insurancePlans})
+    
+      return firebase.database().ref().update(updates)
+  }
 
-
+  buyShares(){
+    var buyAmount = this.state.inputValue
+    if (buyAmount >= this.state.row.price*0.01){
+      var index = this.state.i
+      var id = this.state.ids[index]
+      var currRemaining = this.state.insurancePlans[index]["amountRemaining"]
+      var amountRemaining = currRemaining - buyAmount
       var stake_token_as_string = String(id) + String(amountRemaining)
       var stake_token = hash(stake_token_as_string)
 
@@ -134,23 +143,20 @@ class TableRow extends Component {
       var payment_expected = parseInt(buyAmount)
 
       var payment_expected_as_bignumber = this.state.myweb3.toBigNumber(payment_expected)
-      
-      if (this.addStakeForStakeholder(stake_token, house_token, this.state.myweb3.toWei(payment_expected_as_bignumber, 'ether'))) {
-        return firebase.database().ref().update(updates)
-      }
-      else {
-        console.log("Purchase rejected in MetaMask")
-      }
+      this.addStakeForStakeholder(stake_token, house_token, this.state.myweb3.toWei(payment_expected_as_bignumber, 'ether'))
+    }
+    else {
+      console.log("Need to invest at least minimum")
     }
   }
 
   render() {
     return (
       <tr>
-        <td key={this.state.row.address}>{this.state.row.address}</td>
-        <td key={this.state.row.city}>{this.state.row.city}</td>
-        <td key={this.state.row.state}>{this.state.row.state}</td>
-        <td key={this.state.row.zip}>{this.state.row.zip}</td>
+        <td key="address">{this.state.row.address}</td>
+        <td key="city">{this.state.row.city}</td>
+        <td key="state">{this.state.row.state}</td>
+        <td key="zip">{this.state.row.zip}</td>
         <td key="quote">{this.state.row.quote}</td>
         <td key="price">{this.state.row.price}</td>
         <td key="remaining">{this.state.row.amountRemaining} ETH</td>
@@ -165,7 +171,7 @@ class TableRow extends Component {
         <td>
           <div className="field">
             <div className="control">
-              <button className="button is-link" id="confirm" onClick={() => this.updateHouse(this.state.i, this.state.inputValue)}>
+              <button className="button is-link" id="confirm" onClick={() => this.buyShares()}>
                 <span className="icon">
                   <i className="fas fa-paper-plane has-text-white"></i>
                 </span>
