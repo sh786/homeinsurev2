@@ -134,11 +134,13 @@ class TableRow extends Component {
       var payment_expected = parseInt(buyAmount)
 
       var payment_expected_as_bignumber = this.state.myweb3.toBigNumber(payment_expected)
-
-      this.addStakeForStakeholder(stake_token, house_token, this.state.myweb3.toWei(payment_expected_as_bignumber, 'ether'))
-
-
-      return firebase.database().ref().update(updates)
+      
+      if (this.addStakeForStakeholder(stake_token, house_token, this.state.myweb3.toWei(payment_expected_as_bignumber, 'ether'))) {
+        return firebase.database().ref().update(updates)
+      }
+      else {
+        console.log("Purchase rejected in MetaMask")
+      }
     }
   }
 

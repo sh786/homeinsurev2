@@ -16,7 +16,6 @@ class TableRow extends Component {
 
   constructor(props) {
     super(props)
-    console.log(props)
     this.state = {
       //parent: props.parent,
       insurancePlans: props.plans,
@@ -27,7 +26,6 @@ class TableRow extends Component {
       myweb3: props.myweb3,
       insuranceInstance: props.insuranceInstance,
     }
-    console.log(this.state)
   }
 
   updateInputValue(evt) {
@@ -36,14 +34,12 @@ class TableRow extends Component {
   }
 
   getAverage(quotes) {
-    console.log(quotes)
     var acc = 0
     for (var i = 0; i < quotes.length; i++) {
       if (quotes[i] != "") {
         acc += Number(quotes[i])
       }
     }
-    console.log(acc)
     var ret = (acc / quotes.length).toString()
     return ret
   }
@@ -95,7 +91,9 @@ class TableRow extends Component {
         this.state.insuranceInstance
           .deployed()
           .then((instance) => {
-            this.state.myweb3.eth.defaultAccount = accounts[0]
+            let temp = this.state.myweb3
+            temp.eth.defaultAccount = accounts[0]
+            this.setState({myweb3: temp})
             insuranceInstance = instance
 
             console.log('Adding evaluator and house pricing info to house token')
@@ -196,11 +194,11 @@ class TableRow extends Component {
   render() {
     return (
       <tr>
-        <td key={this.state.row.address}>{this.state.row.address}</td>
-        <td key={this.state.row.city}>{this.state.row.city}</td>
-        <td key={this.state.row.state}>{this.state.row.state}</td>
-        <td key={this.state.row.zip}>{this.state.row.zip}</td>
-        <td key={this.state.row.price}>{this.state.row.price}</td>
+        <td key="address">{this.state.row.address}</td>
+        <td key="city">{this.state.row.city}</td>
+        <td key="state">{this.state.row.state}</td>
+        <td key="zip">{this.state.row.zip}</td>
+        <td key="price">{this.state.row.price}</td>
         <td>
           <div className="field">
             <div className="control">
