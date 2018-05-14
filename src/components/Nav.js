@@ -2,10 +2,15 @@ import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import {Auth} from 'aws-amplify';
 
+let price = require('crypto-price')
+
 export default class Nav extends Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      ethPrice: 0
+    }
   }
 
   handleLogout = async event => {
@@ -17,6 +22,11 @@ export default class Nav extends Component {
   }
 
   render() {
+    price.getCryptoPrice('USD', 'ETH').then(obj => { // Base for ex - USD, Crypto for ex - ETH 
+      this.setState({ethPrice: Math.round(obj.price)})
+    }).catch(err => {
+      console.log(err)
+    })
     return (
       <div>
         <nav
@@ -53,6 +63,12 @@ export default class Nav extends Component {
 
             {(this.props.isAuthenticated && this.props.currentUser.username !== '8cf69f19-9be1-404e-83d8-ed1f064a035f')
               ? <div className="navbar-end">
+                  <span className="navbar-item has-text-white">
+                  1 ETH = ${this.state.ethPrice}
+                  </span>
+                  <span className="navbar-item has-text-white">
+                  
+                  </span>
                   <Link className="navbar-item has-text-white" to='/request'>
                     Request
                   </Link>
@@ -68,6 +84,12 @@ export default class Nav extends Component {
                 </div>
               : (this.props.isAuthenticated && this.props.currentUser.username === '8cf69f19-9be1-404e-83d8-ed1f064a035f')
                 ? <div className="navbar-end">
+                <span className="navbar-item has-text-white">
+                1 ETH = ${this.state.ethPrice}
+                  </span>
+                  <span className="navbar-item has-text-white">
+                  
+                  </span>
                     <Link className="navbar-item has-text-white" to='/eval'>
                       Evaluator
                     </Link>
@@ -76,6 +98,12 @@ export default class Nav extends Component {
                     </Link>
                   </div>
                 : <div className="navbar-end">
+                <span className="navbar-item has-text-white">
+                    1 ETH = ${this.state.ethPrice}
+                  </span>
+                  <span className="navbar-item has-text-white">
+                  
+                  </span>
                   <Link className="navbar-item has-text-white" to='/'>
                     Login
                   </Link>

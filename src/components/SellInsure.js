@@ -8,7 +8,6 @@ class TableRow extends Component {
 
   constructor(props) {
     super(props)
-    console.log(props)
     this.state = {
       //parent: props.parent,
       insurancePlans: props.plans,
@@ -19,7 +18,6 @@ class TableRow extends Component {
       myweb3: props.myweb3, 
       insuranceInstance: props.insuranceInstance,
     }
-    console.log(this.state)
   }
 
   updateInputValue(evt) {
