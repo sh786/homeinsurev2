@@ -438,7 +438,6 @@ class App extends Component {
 
 
   render() {
-    console.log(this.state.currentUser)
     let childProps = {
       isAuthenticated: this.state.isAuthenticated,
       userHasAuthenticated: this.userHasAuthenticated
