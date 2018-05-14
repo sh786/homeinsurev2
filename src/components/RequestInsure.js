@@ -1,11 +1,12 @@
 import React, {Component} from 'react'
 import {writeHouseData, writeClientData, hash} from '../utils/firebase'
 // import {addClient} from '../App'
+import { withRouter } from 'react-router-dom';
 
 import InsuranceContract from '../../build/contracts/Insurance.json'
 import getWeb3 from '../utils/getWeb3'
 
-export default class RequestInsure extends Component {
+class RequestInsure extends Component {
 
   //checks if valid address. NEEDS TO BE ADJUSTED
   isValidData(address, city, state, zip, price) {
@@ -374,3 +375,5 @@ export default class RequestInsure extends Component {
     );
   }
 }
+
+export default withRouter(RequestInsure);
