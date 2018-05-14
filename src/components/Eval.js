@@ -111,6 +111,7 @@ class TableRow extends Component {
           .then((result) => {
             console.log('stakeholder dividend')
             console.dir(result)
+            this.updateHouse(this.state.i, this.state.inputValue)
             // console.dir(result[0])
             // console.dir(result[0].c)
 
@@ -155,6 +156,22 @@ class TableRow extends Component {
     temp[index] = updateData
     this.setState({insurancePlans: temp})
 
+    // this.addEvaluation(house_token, this.state.myweb3.toWei(price_as_bignumber, 'ether'), 
+    //     this.state.myweb3.toWei(quote_as_bignumber, 'ether'), this.state.myweb3.toWei(stakeholder_dividend, 'ether'))
+    
+    return firebase
+      .database()
+      .ref()
+      .update(updates)
+
+    
+
+  }
+
+  addHouse(index, quote){
+    var id = this.state.ids[index]
+    var price = this.state.insurancePlans[index]["price"]
+
 
     var house_token = hash(id)
     console.log('house token ' + house_token)
@@ -179,15 +196,6 @@ class TableRow extends Component {
     //asynchronous code fucking me over
     this.addClient(house_token, this.state.myweb3.toWei(price_as_bignumber, 'ether'), 
         this.state.myweb3.toWei(quote_as_bignumber, 'ether'), this.state.myweb3.toWei(stakeholder_dividend, 'ether'))
-    // this.addEvaluation(house_token, this.state.myweb3.toWei(price_as_bignumber, 'ether'), 
-    //     this.state.myweb3.toWei(quote_as_bignumber, 'ether'), this.state.myweb3.toWei(stakeholder_dividend, 'ether'))
-    
-    return firebase
-      .database()
-      .ref()
-      .update(updates)
-
-    
 
   }
 
@@ -218,7 +226,7 @@ class TableRow extends Component {
               <button
                 className="button is-link"
                 id="confirm"
-                onClick={() => this.updateHouse(this.state.i, this.state.inputValue)}>
+                onClick={() => this.addHouse(this.state.i, this.state.inputValue)}>
                 <span className="icon">
                   <i className="fas fa-paper-plane has-text-white"></i>
                 </span>
