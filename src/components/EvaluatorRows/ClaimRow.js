@@ -22,7 +22,7 @@ export default class ClaimRow extends Component {
 
     // Declaring this for later so we can chain functions on SimpleStorage.
     var insuranceInstance
-
+    console.log(this.state.myweb3)
     // Get accounts.
     this
       .state
@@ -33,19 +33,17 @@ export default class ClaimRow extends Component {
           .deployed()
 
           .then((instance) => {
-            this.state.myweb3.eth.defaultAccount = accounts[0]
-            insuranceInstance = instance
+          //   this.state.myweb3.eth.defaultAccount = accounts[0]
+          //   insuranceInstance = instance
 
-            console.log('Adding stake')
-            return insuranceInstance.create_insurance_claim.call(
-                _house_token, _claim_amount, {from: accounts[0]})
-          })
-          .then((result) => {
+          //   console.log('Adding stake')
+          //   return insuranceInstance.create_insurance_claim.call(
+          //       _house_token, _claim_amount, {from: accounts[0]})
+          // })
+          // .then((result) => {
             console.log('transaction completed')
-            //if declined, true
-            console.log(result)
-            return insuranceInstance.create_insurance_claim(
-                _house_token, _claim_amount, {from: accounts[0]})
+            return insuranceInstance.get_address_to_house_tokens(
+                accounts[0], {from: accounts[0]})
           })
 
       })
@@ -63,7 +61,10 @@ export default class ClaimRow extends Component {
     var inputValue_as_int = parseInt(inputValue)
     var inputValue_as_bignumber = this.state.myweb3.toBigNumber(inputValue_as_int)
 
+
+
     var house_token = hash(id)
+    console.log('house token ' + house_token)
     var inputValue_as_wei = this.state.myweb3.toWei(inputValue_as_bignumber, 'ether')
 
     this.evaluateInsuranceClaim(house_token, inputValue_as_wei)
@@ -73,11 +74,11 @@ export default class ClaimRow extends Component {
   render() {
     return (
       <tr>
-        <td key={this.state.row.address}>{this.state.row.address}</td>
-        <td key={this.state.row.city}>{this.state.row.city}</td>
-        <td key={this.state.row.state}>{this.state.row.state}</td>
-        <td key={this.state.row.zip}>{this.state.row.zip}</td>
-        <td key={this.state.row.price}>{this.state.row.price}</td>
+        <td key='address'>{this.state.row.address}</td>
+        <td key='city'>{this.state.row.city}</td>
+        <td key='state'>{this.state.row.state}</td>
+        <td key='zip'>{this.state.row.zip}</td>
+        <td key='price'>{this.state.row.price}</td>
         <td>
           <div className="field">
             <div className="control">
