@@ -40,7 +40,6 @@ export default class TableRowActive extends Component {
       status: 5
     }
     updates['/houses/' + id] = updateData
-    console.log(updates)
     var tempPlan = this.state.row
     tempPlan = updateData
     this.setState({row: tempPlan})
