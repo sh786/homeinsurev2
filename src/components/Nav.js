@@ -2,10 +2,16 @@ import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import {Auth} from 'aws-amplify';
 
+global.fetch = require('node-fetch')
+const cc = require('cryptocompare')
+
 export default class Nav extends Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      ethPrice: 0
+    }
   }
 
   handleLogout = async event => {
@@ -17,6 +23,11 @@ export default class Nav extends Component {
   }
 
   render() {
+    // cc
+    //   .price('ETH', 'USD')
+    //   .then(prices => {
+    //     this.setState({ethPrice: prices})
+    //   })
     return (
       <div>
         <nav

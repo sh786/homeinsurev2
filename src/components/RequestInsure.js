@@ -307,6 +307,7 @@ export default class RequestInsure extends Component {
       // TODO: Also store user's ethereum address
       // TODO: Generate house token
       // TODO: Add add_house_to_client
+      this.props.history.push('/home')
     }
   }
 
