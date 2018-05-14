@@ -259,31 +259,31 @@ contract Insurance {
     my_house.is_claim_active = true;
     my_house.claim_amount = _claim_amount;
     house_info[_house_token] = my_house;
-
-    return accept_insurance_claim(_house_token);
-
-  }
-
-  function accept_insurance_claim (uint _house_token) internal returns (bool success) { 
-    House memory my_house = house_info[_house_token];
-    address my_house_owner = my_house.house_owner;
-    // if (!my_house.is_claim_active) {
-    //   return false;
-    // }
-    my_house_owner.transfer(my_house.claim_amount);
-    uint remaining_payout = my_house.total_to_insure - my_house.claim_amount;
-    uint[] memory my_stake_tokens = my_house.stake_tokens;
-    for (uint j = 0; j < my_stake_tokens.length; j++) {
-      Stake memory my_stake = stake_info[my_stake_tokens[j]];
-      address stake_owner = my_stake.stake_owner;
-      uint total_payout = uint(remaining_payout * my_stake.amount_insured/my_house.total_to_insure);
-      stake_owner.transfer(total_payout);
-    }
-
-    delete house_info[_house_token];
     return true;
+    //return accept_insurance_claim(_house_token);
 
   }
+
+  // function accept_insurance_claim (uint _house_token) internal returns (bool success) { 
+  //   House memory my_house = house_info[_house_token];
+  //   address my_house_owner = my_house.house_owner;
+  //   // if (!my_house.is_claim_active) {
+  //   //   return false;
+  //   // }
+  //   my_house_owner.transfer(my_house.claim_amount);
+  //   // uint remaining_payout = my_house.total_to_insure - my_house.claim_amount;
+  //   // uint[] memory my_stake_tokens = my_house.stake_tokens;
+  //   // for (uint j = 0; j < my_stake_tokens.length; j++) {
+  //   //   Stake memory my_stake = stake_info[my_stake_tokens[j]];
+  //   //   address stake_owner = my_stake.stake_owner;
+  //   //   uint total_payout = uint(remaining_payout * my_stake.amount_insured/my_house.total_to_insure);
+  //   //   stake_owner.transfer(total_payout);
+  //   // }
+
+  //   //delete house_info[_house_token];
+  //   return true;
+
+  // }
 
 
 
