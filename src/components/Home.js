@@ -12,7 +12,7 @@ export default class Home extends Component {
             <div className="level-left has-text-centered">
               <Link to='/request'>
                 <div className="box buy-button has-background-info has-text-white">
-                  <p>Owner</p>
+                  <p>Request</p>
                   <p className="sub-button-text">Request an insurance quote.</p>
                 </div>
               </Link>
@@ -20,7 +20,7 @@ export default class Home extends Component {
             <div className="level-right has-text-centered">
               <Link to='/sell'>
                 <div className="box sell-button has-background-info has-text-white">
-                  <p>Seller</p>
+                  <p>Invest</p>
                   <p className="sub-button-text">Buy shares in an insurance plan.</p>
                 </div>
               </Link>
