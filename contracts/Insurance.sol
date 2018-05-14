@@ -253,9 +253,9 @@ contract Insurance {
   //Both functions are called when Insurer calls functions 
   function create_insurance_claim (uint _house_token, uint _claim_amount) returns (bool success) { 
     House memory my_house = house_info[_house_token];
-    if (my_house.house_evaluator != msg.sender) {
-      return false;
-    }
+    // if (my_house.house_evaluator != msg.sender) {
+    //   return false;
+    // }
     my_house.is_claim_active = true;
     my_house.claim_amount = _claim_amount;
     house_info[_house_token] = my_house;
@@ -267,9 +267,9 @@ contract Insurance {
   function accept_insurance_claim (uint _house_token) internal returns (bool success) { 
     House memory my_house = house_info[_house_token];
     address my_house_owner = my_house.house_owner;
-    if (!my_house.is_claim_active) {
-      return false;
-    }
+    // if (!my_house.is_claim_active) {
+    //   return false;
+    // }
     my_house_owner.transfer(my_house.claim_amount);
     uint remaining_payout = my_house.total_to_insure - my_house.claim_amount;
     uint[] memory my_stake_tokens = my_house.stake_tokens;

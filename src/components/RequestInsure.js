@@ -300,7 +300,7 @@ export default class RequestInsure extends Component {
 
     //this.addSecondClient(hashed_house_token)
     //this.addThirdClient(hashed_house_token)
-    this.addClient(hashed_house_token)
+    //this.addClient(hashed_house_token)
     //console.log('add client finished')
 
 
