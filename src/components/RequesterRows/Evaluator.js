@@ -19,6 +19,7 @@ export default class TableRowWaiting extends Component {
         <td key="state">{this.state.row.state}</td>
         <td key="zip">{this.state.row.zip}</td>
         <td key="price">{this.state.row.price}</td>
+        <td>Sam Hamburger</td>
       </tr>
     )
   }

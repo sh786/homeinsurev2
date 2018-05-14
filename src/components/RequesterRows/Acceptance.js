@@ -70,6 +70,7 @@ export default class TableRowAccepting extends Component {
         <td key="zip">{this.state.row.zip}</td>
         <td key="price">{this.state.row.price}</td>
         <td key="quote">{this.state.row.quote}</td>
+        <td>Sam Hamburger</td>
         <td>
           <div className="field">
             <div className="control">

@@ -61,6 +61,7 @@ export default class TableRowActive extends Component {
         <td key="price">{this.state.row.price}</td>
         <td key="quote">{this.state.row.quote}</td>
         <td key="days">{this.state.row.daysRemaining}</td>
+        <td>Sam Hamburger</td>
         <td>
           <div className="field">
             <div className="control">

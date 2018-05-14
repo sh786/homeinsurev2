@@ -46,7 +46,6 @@ export default class RequesterProfile extends Component {
   render() {
     return (
       <div>
-        <h4 className="title is-3 requester">Welcome, Requester Name.</h4>
         <h5 className="title is-5 requester">Homes waiting on evaluations</h5>
         <table className="table is-bordered is-striped is-hoverable is-fullwidth">
           <thead>
@@ -56,6 +55,7 @@ export default class RequesterProfile extends Component {
               <th>State</th>
               <th>Zip</th>
               <th>Total Value</th>
+              <th>Assigned Evaluator</th>
             </tr>
           </thead>
           <tbody>
@@ -79,6 +79,7 @@ export default class RequesterProfile extends Component {
               <th>Zip</th>
               <th>Total Value</th>
               <th>Quoted Premium</th>
+              <th>Evaluator</th>
               <th>Accept</th>
               <th>Decline</th>
             </tr>
@@ -134,6 +135,7 @@ export default class RequesterProfile extends Component {
               <th>Total Value</th>
               <th>Premium</th>
               <th>Days Remaining</th>
+              <th>Assigned Claim Evaluator</th>
               <th>Request Claim</th>
             </tr>
           </thead>
