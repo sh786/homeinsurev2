@@ -134,7 +134,6 @@ export default class RequesterProfile extends Component {
               <th>Zip</th>
               <th>Total Value</th>
               <th>Premium</th>
-              <th>Days Remaining</th>
               <th>Assigned Claim Evaluator</th>
               <th>Request Claim</th>
             </tr>
