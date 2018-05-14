@@ -43,7 +43,6 @@ export default class TableRowAccepting extends Component {
       status: 3
     }
     updates['/houses/' + id] = updateData
-    console.log(updates)
     var tempPlan = this.state.row
     tempPlan = updateData
     this.setState({row: tempPlan})

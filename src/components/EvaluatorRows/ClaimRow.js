@@ -6,7 +6,6 @@ export default class ClaimRow extends Component {
 
   constructor(props) {
     super(props)
-    console.log(props)
     this.state = {
       //parent: props.parent,
       insurancePlans: props.plans,
@@ -17,7 +16,6 @@ export default class ClaimRow extends Component {
       insuranceInstance: props.insuranceInstance,
       myweb3: props.myweb3,
     }
-    console.log(this.state)
   }
 
   evaluateInsuranceClaim(_house_token, _claim_amount) {
@@ -57,14 +55,10 @@ export default class ClaimRow extends Component {
     this.setState({
       inputValue: evt.target.value
     })
-    console.log(this.state.inputValue)
   }
 
   updateHouse(index, inputValue) {
 
-    console.log(this.state.ids)
-    console.log(index)
-    console.log(this.state.ids[index])
     var id = this.state.ids[index]
     var inputValue_as_int = parseInt(inputValue)
     var inputValue_as_bignumber = this.state.myweb3.toBigNumber(inputValue_as_int)

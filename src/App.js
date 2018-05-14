@@ -46,7 +46,6 @@ class App extends Component {
 
       this.addInsuranceContract()
       //this.addClient(100)
-      console.log('beast')
       // Instantiate contract once web3 provided.
     }).catch(() => {
       console.log('Error finding web3.')

@@ -283,7 +283,6 @@ export default class RequestInsure extends Component {
 
   setHouse() {
 
-    console.log(this.props.myweb3)
     let address = this.refs.address.value
     let city = this.refs.city.value
     let state = this.refs.state.value
@@ -295,7 +294,6 @@ export default class RequestInsure extends Component {
     var concatenated_city_address = city.concat(address)
 
     let hashed_house_token = hash(concatenated_city_address)
-    console.log(this.props.storageValue)
     //this.addClient(hashed_house_token)
 
     //this.addSecondClient(hashed_house_token)
